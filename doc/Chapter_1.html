@@ -1,0 +1,330 @@
+<html>
+<head>
+<!-- Style sheet for fonts -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+<title>GAMAP User Guide</title>
+</head>
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="FF0000" HLINK="#FFFF00">
+
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_0.html">Previous</A> | <A HREF="Chapter_2.html">Next</A> | <a href="Chapter_1.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size24bi"><A NAME="1"></a>1. Introduction to GAMAP</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="1.1"></a>1.1 Overview</p>
+ <p align="justify">GAMAP, 
+  the Global Atmospheric Model (output) Analysis Package, is a collection of programs 
+  which facilitates analysis of CTM (Chemical Transport Model) data. The <A HREF="../gamap2_manual/files/gamap.v2-10.tar.gz">distribution 
+file</A> contains several source code directories, each of which contains source code routines that have been grouped by functionality. </p>
+ <p align="justify">GAMAP is 
+  written in IDL (<A HREF="http://www.rsinc.com/idl/" TARGET="_blank">Interactive 
+  Data Language</A> by <A HREF="http://www.exelisvis.com/language/en-US/ProductsServices/IDL.aspx" TARGET="_new">Exelis Visual Information Solutons</A>, formerly ITT Visualization) and requires IDL version 5.5 or higher. The package provides 
+  an easy-to-use text-based interactive interface to fulfill most basic plotting 
+  needs for CTM output, including <A HREF="Chapter_8.html">map plots, vertical cross 
+  sections, zonal means</A>, etc. Since GAMAP v1&ndash;30, animation and multi-panel 
+  plots have been supported. But, as the name suggests, GAMAP is more than a simple 
+  analysis program: the package provides a collection of high level routines that allows you to analyze atmospheric model output as well.</p>
+ <p align="justify"> GAMAP v2&ndash;19
+ 
+read data from the following file formats:</p>
+ <ul class="disc">
+  <li>GISS&ndash;II style ASCII 
+   output files (a.k.a. &quot;ASCII punch&quot; files)</li>
+  <li><a href="file:///C|/Documents%20and%20Settings/Bob%20Yantosca/My%20Documents/Web%20Sites/geos/index.html" target="_blank">GEOS&ndash;Chem</a> 
+    binary output files (a.k.a. &quot;binary punch&quot; files)</li>
+  <li><a href="file:///C|/Documents%20and%20Settings/Bob%20Yantosca/My%20Documents/Web%20Sites/geos/index.html" target="_blank">GEOS&ndash;Chem</a> 
+    binary meteorological field input files</li>
+  <li>HDF4&ndash;EOS files (such 
+   as are created by NASA/Global Modeling &amp; Assimilation Office)</li>
+  <li>netCDF files adhering 
+    to the <a href="http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html" target="_blank">COARDS</a> 
+    file convention</li>
+  <li>netCDF files created 
+    by GAMAP routines and <a href="by_alphabet/gamap_b.html#BPCH2COARDS" target="_blank">BPCH2COARDS</a> </li>
+  <li>netCDF files created 
+    by the Global Modeling Initiative (GMI) at NASA/GSFC</li>
+</ul>
+<p align="justify">GAMAP v2&ndash;19
+ 
+  also contains routines which can be used to convert 2D, 3D, or 4D data arrays from 
+  other sources into a <A HREF="Chapter_6.html#6.4">GAMAP datainfo record</A> so 
+  that it can be displayed with the GAMAP plotting routines. </p>
+<p align="justify">With GAMAP 
+  routines <a href="by_alphabet/gamap_c.html#CTM_DIFF" target="_blank">CTM_DIFF</a> and <a href="by_alphabet/gamap_c.html#CTM_SUM" target="_blank">CTM_SUM</a>, it is 
+  possible to plot differences between or averages of individual data records. 
+  Another GAMAP  routine, <a href="by_alphabet/gamap_c.html#CTM_SUM_EMISSIONS" target="_blank">CTM_SUM_EMISSIONS</a>, 
+  allows you to compute emission totals in Tg, Gg, or Mg.</p>
+<p align="justify">NOTE: 
+  GAMAP was developed at Harvard University. Its authors are partly funded by 
+  government money. Therefore, it is probably OK to offer GAMAP as freeware to 
+  users outside of Harvard. However, we urge you to keep the copyright notice 
+  with each file and clearly mark changes that you make to any subroutine. We 
+  would be extremely happy to hear of any improvements you make (and of errors 
+  you find and correct). Please understand that we can give only minimal support 
+  beyond this document to external users.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<P class="size20bi"><A NAME="1.2"></a>1.2 Summary of new features in GAMAP</p> 
+<p align="justify"> Here is 
+  a summary of the most important changes in GAMAP since v1&ndash;50. For a more detailed list of revisions and documentation, please see <a href="Chapter_5.html">Chapter 5: GAMAP Reference</a>.</p>
+<p align="justify" class="size16bi">GAMAP v2&ndash;19 (16 Dec 2016)</p>
+<ul class="disc">
+  <li>Updated the benchmark plotting routines for consistency with <a href="http://wiki.geos-chem.org/GEOS-Chem_v11-01" target="_blank">GEOS&ndash;Chem v11&ndash;01</a>  </li>
+  <li>Added support for MERRA-2 horizontal and vertical grids</li>
+  <li>Added PLOT_GPROF routine to plot output obtained with the GNU profiler (<tt>gprof</tt>)</li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;18
+  (01 May 2015)</p>
+<ul class="disc">
+  <li>Updated the benchmark plotting routines for consistency with <a href="http://wiki.geos-chem.org/GEOS-Chem_v10-01" target="_blank">GEOS&ndash;Chem v10&ndash;01</a>
+    <ul>
+      <li>For most emission species, plot anthro + biofuel because these are lumped together by HEMCO</li>
+      <li>Added routines to plot emission maps and emission differences</li>
+      <li>Added updates to plot diagnostic ouptut from the <a href="http://wiki.geos-chem.org/Coupling_GEOS-Chem_with_RRTMG" target="_blank">RRTMG</a> and <a href="http://wiki.geos-chem.org/UCX_chemistry_mechanism" target="_blank">UCX</a> simulations</li>
+    </ul>
+  </li>
+  <li>Several updates to BPCH2COARDS, which converts bpch files to netCDF format:
+    <ul>
+      <li>Improved the handling of 4D data blocks</li>
+      <li>Ensure that longitudes are always monotonically increasing (this is required by the <a href="http://wiki.geos-chem.org/Preparing_data_files_for_use_with_HEMCO" target="_blank">COARDS standard</a>)</li>
+      <li>Define dimensions in this order: time, lev (if needed), lat, lon</li>
+      <li>Add more variable and global attributes for better COARDS compliance</li>
+    </ul>
+  </li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;17
+  (24 Jan 2014)</p>
+<ul class="disc">
+  <li>Updated the benchmark plotting routines for consistency with <a href="http://wiki.geos-chem.org/GEOS-Chem_v9-02" target="_blank">GEOS&ndash;Chem v9&ndash;02</a></li>
+  <li>Introduced compatibility with <a href="http://wiki.geos-chem.org/GEOS-FP" target="_blank">GEOS-FP met data</a></li>
+  <li>Improved the  vertical regridding routine REGRID_COLUMN</li>
+  <li>Improved netCDF file I/O capability with updated routines:
+    <ul>
+      <li>BPCH2COARDS</li>
+      <li> CTM_READ_COARDS</li>
+    </ul>
+  </li>
+  <li>Improved routine READDATA so that it can:
+    <ul>
+      <li>read data from files having up to  200,000 lines</li>
+      <li>read files containing &quot;NaN&quot; values</li>
+    </ul>
+  </li>
+  <li>Added flexible colorbar scaling in TVMAP and TVPLOT (with the /CBSCALE option) </li>
+  <li>Now can read binary punch files larger than 2.4 GB in size</li>
+</ul>
+<p align="justify" class="size16bi"> GAMAP v2&ndash;15
+  (11 Feb 2011; Patch 08 Jun 2011)</p>
+<ul class="disc">
+  <li>More updates for compatibility with  <a href="http://wiki.geos-chem.org/MERRA" target="_blank">MERRA met data</a></li>
+  <li>New function MAKE_PDF converts PostScript to PDF output</li>
+  <li>Improvements to routines CTM_GRID, CTM_TYPE, GETETA, BPCH2NC for handling hybrid grids</li>
+  <li>Add /NOERASE keyword to TVPLOT to make it operate in the same way as TVMAP</li>
+  <li>Plotting codes used to create plots from GEOSChem 1-month benchmark simulations are now part of the GAMAP package</li>
+  <li>Routine COLORBAR now contains the UPOS keyword, which allows you to explicity control the placement of the colorbar unit string.</li>
+  <li>Modifications to the auto-documentation code used to create the GAMAP reference pages</li>
+  <li>New routine CTM_PLOTDIFF4 for creating 4-panel plots</li>
+  <li>Other minor fixes</li>
+</ul>
+<p class="size16bi">GAMAP v2&ndash;14
+  (09 Aug 2010)</p>
+<ul class="disc">
+  <li>Updates for reading and plotting <a href="http://wiki.geos-chem.org/MERRA" target="_blank">MERRA met data</a></li>
+  <li>Now allow polar maps to use pixel plots</li>
+  <li>New function FIND_TRACER_INDEX returns the tracer number given the diagnostic category and tracer name </li>
+  <li>Minor fixes in several plotting routines (CTM_OVERLAY, CTM_PLOTDIFF)</li>
+  <li>Minor fixes in timeseries routines</li>
+  </ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;13 (15 Oct 2009)</p>
+<ul class="disc">
+  <li>User-defined colortable in MYCT</li>
+  <li>New routine to retrieve an air number density for GEOS&ndash;Chem</li>
+  <li>New routine to recursively convert binary punch (bpch) files into netCDF format</li>
+  <li>New updates to TVMAP, TVPLOT, and CTM_PLOTDIFF</li>
+  <li>Many other minor fixes</li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;12 (17 Jul 2008)</p>
+<ul class="disc">
+  <li> <a href="http://acmg.seas.harvard.edu/geos/wiki_docs/gamap_color_table_file.pdf" target="_blank">Added several new colortables to MYCT</a>, including all of the ColorBrewer tables. The user may now select a colortable via an interactive dialog box.</li>
+  <li>TVMAP may now be used with any of the IDL map projections. Some minor issues from the previous version have now been resolved. </li>
+  <li>Various minor updates and fixes in several routines.</li>
+  <li><a href="http://wiki.geos-chem.org/Main_Page#GAMAP" target="_blank">A GAMAP section has been added to the GEOS&ndash;Chem wiki site</a>. Some helpful tips and tricks and other examples are posted here. </li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;11 (03 Dec 2007)</p>
+<ul class="disc">
+  <li> New <a href="Chapter_4.html#4.4.3">map projections</a> (e.g. Lambert, Mollweide, Continental US, etc.) are now available for all types of plots </li>
+  <li>The <a href="Chapter_3.html#3.2.1">MYCT drawing colors</a> have been modified so that they are less saturated and look better on the screen</li>
+  <li>Routines have been included for reading <a href="Chapter_6.html#6.9">GEOS&ndash;Chem time series output</a> (4D data: lon, lat, alt, time)</li>
+  <li><a href="by_alphabet/gamap_c.html#COLORBAR" target="_blank">COLORBAR </a>can now draw triangles to denote values beyond the min &amp; max values that are displayed </li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;10 (31 Jul 2007)</p>
+<ul class="disc">
+  <li>Now can read GEOS&ndash;5 data </li>
+  <li>Now includes several <a href="Chapter_3.html">customized color tables</a></li>
+  <li>Now includes expanded <a href="Chapter_5.html">on-line documentation</a></li>
+  <li>Now can read 4D data blocks (lon, lat, alt, time) </li>
+</ul>
+<p class="size16bi">GAMAP v2&ndash;05 (16 Oct 2006) </p>
+<ul class="disc">
+  <li>New routine: CTM_OVERLAY can be used to overplot data atop an image map</li>
+  <li>New routine: FIND_CELLS_BY_COUNTRY can be used to find which grid boxes belong to a given country</li>
+  <li>New routine: PLOT_CPD can be used to plot cumulative probability plots</li>
+  <li>New routines for time and date: ADD_DATE, DATE2YMD, YMD2DATE</li>
+  <li>Updated routine: CTM_EXAMPLES shows how to make certain kinds of plots</li>
+  <li>Updated routine: CTM_REGRIDH now regrids from coarse to fine grids in a more correct manner</li>
+  <li>Updated routine: QQNORM now uses simpler algorithm</li>
+  <li>Updated routine: CTM_GRID now can handle multi-level &quot;GENERIC&quot; grids</li>
+  <li>Updated routine: BPCH_SEP now can save out a subset of the globe or a given tracer</li>
+  <li>Updated routine: MYCT  can now use the red-white-blue &quot;difference&quot; colortable</li>
+  <li>Regridding routine CTM_GETWEIGHT updated for 1 x 1.25 grids</li>
+  <li>New colortable for differences (negatives=blue, positives=red, zero=white)</li>
+  <li>Other minor fixes and improvements</li>
+</ul>
+<p align="justify" class="size16bi">GAMAP v2&ndash;04 (08 Feb 2006) 
+<ul class="disc">
+  <li>Bug fix: now can read 
+  HDF, HDF&ndash;EOS, netCDF files when using dialog box to specify filename</li>
+  <li>gamap.pro main routine 
+    now trims white space from the input filename</li>
+  <li>Now tests properly for 
+    GCAP met field files</li>
+  <li>Various minor updates 
+    to TVMAP, TVPLOT and other routines</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v2&ndash;03 (11 Apr 2005)
+<ul class="disc">
+  <li>GAMAP can now read COARDS-compliant 
+    netCDF files</li>
+  <li>New routine CTM_READ_PLANEFLIGHT 
+  reads GEOS&ndash;CHEM planeflight diagnostic data</li>
+  <li>BPCH2COARDS now allows 
+    you to convert data from binary punch file to <a href="http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html" target="_blank">COARDS 
+    netCDF format</a></li>
+  <li>BPCH2ASCII, BPCH2HDF, 
+    BPCH2NC now allow you to select data blocks by category</li>
+  <li>Routine CTM_CLEANUP now 
+    also clears all heap variable and pointer memory</li>
+  <li>The user may suppress 
+    screen output in routines CTM_GET_DATA and CTM_GET_DATABLOCK</li>
+  <li>CTM_SUM_EMISSIONS can 
+    now report totals in Tg, Gg, or Mg</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v2&ndash;02 (04 Jun 2004)
+<ul class="disc">
+  <li>Added tickmarks to GAMAP 
+    color bar; can now also flag a specific value</li>
+  <li>TOOLS routine MFINDFILE 
+    now calls the new IDL FILE_SEARCH() routine for IDL 5.5+</li>
+  <li>Added OMARGIN 
+    and MARGIN<font face="Georgia, Times New Roman, Times, serif"> 
+    keywords to TVMAP and TVPLOT to better specify plot positions</li>
+  <li>Bug fix: Now can read 
+    all months of data stored within a GMI netCDF file</li>
+  <li>Bug fix: Now avoid infinite 
+    loop when reading ASCII punch files (e.g. from GISS model)</li>
+  <li>Bug fix: GEOS&ndash;4 
+  has 17 purely tropospheric levels, not 18. </li>
+  <li>Bug fix: When reading 
+    HDF&ndash;EOS files, if model type is undetermined, it asks user to supply 
+  the model type</li>
+  <li>Updated comments, removed 
+    obsolete features</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v2&ndash;01 (01 Feb 2004)
+<ul class="disc">
+  <li>Can now read from certain 
+    types of GMI netCDF format files</li>
+  <li>Can now read netCDF 
+    files which were created by GAMAP helper routine 
+    bpch2nc.pro</li>
+  <li>Can now read HDF&ndash;EOS 
+  gridded data files (such as the met field files from GMAO)</li>
+  <li>Supports both GEOS&ndash;4 
+  55-layer and 30-layer vertical grids</li>
+  <li>Files 
+    diaginfo.dat and tracerinfo.dat 
+    were ewritten to eliminate historical baggage</li>
+  <li>Improved memory management&#151;now 
+    frees pointer heap memory after reading in data</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v1&ndash;53 (24 Oct 2003)
+<ul class="disc">
+  <li>Updated routines for 
+    new netCDF library in IDL 6.0+</li>
+  <li>Handles GEOS&ndash;3 
+  30-layer grid more smoothly</li>
+  <li>Now can read data from 
+  GEOS&ndash;4/fvDAS met field input files to GEOS&ndash;CHEM</li>
+  <li>Eliminates problem with 
+    endian swapping when reading in binary files on all platforms</li>
+  <li>Improved memory management&#151;now 
+    frees pointer heap memory after reading in data</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v1&ndash;52 (08 Feb 2003)
+<ul class="disc">
+  <li>Now supports 7-pressure-layer 
+    MOPITT grid</li>
+  <li>Now supports extra GEOS-4 
+    met fields</li>
+  <li>Now features Improved 
+    regridding routines ctm_regridh.pro 
+    and ctm_getweight.pro</li>
+  <li>Now supports extra sulfate 
+  and nitrogen tracers from GEOS&ndash;CHEM v5-03</li>
+  <li>Now supports GIF, JPEG, 
+    TIFF, PNG or BMP output</li>
+  <li>Now uses David Fanning's 
+     tvread.pro for better screen capture</li>
+  <li>MPEG support has been 
+    discontinued</li>
+  <li>Now features improved 
+    TVMAP and TVPLOT display options</li>
+  <li>Now can print string 
+    labels from routine colorbar.pro</li>
+  <li>Fixed minor bugs in 
+     myct.pro for definition of 
+    !MYCT variable</li>
+</ul>
+<P align="justify" class="size16bi">GAMAP v1&ndash;51 (01 Oct 2002)
+<ul class="disc">
+  <li> 
+    added support for DIAL/LIDAR colortable  </li>
+  <li> 
+    GAMAP plotting routines (e.g. TVMAP, TVPLOT, CTM_PLOT, etc). now can adjust 
+    to the number of colors dynamically  </li>
+  <li> 
+    added routines eos_getsw.pro 
+    and eos_getgr.pro 
+    to read data from the HDF-EOS swath and gridded data types  </li>
+  <li> 
+    added routine ctm_overlay_flight.pro 
+  </li>
+</ul>
+<span class="size16bi">GAMAP v1&ndash;50 (24 
+May 2002) </span>
+<ul class="disc">
+  <li> added more support 
+    for fvDAS/GEOS-4 fields </li>
+  <li> added new horiziontal 
+    regridding routine ctm_regridh.pro 
+  </li>
+  <li> added new vertical 
+    regridding routine regrid_column.pro 
+  </li>
+  <li> added routines to convert 
+    binary punch (*.bpch) files into HDF, netCDF, or simple ASCII files </li>
+  <li> added convenience routines 
+    to read/write data from/to netCDF file format </li>
+  <li> added convenience routines 
+    to read/write data from/to HDF file format </li>
+  <li> added routines to plot 
+    the difference or ratio between two data fields (for CTM validation purposes) 
+  </li>
+</ul>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p align="center" class="size14bi"><A HREF="Chapter_0.html">Previous</A> | <A HREF="Chapter_2.html">Next</A> | <a href="Chapter_1.html" target="_blank">Printable View (no frames)</a></p>
+</body>
+</html>

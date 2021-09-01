@@ -1,0 +1,835 @@
+<HTML>
+<HEAD>
+<!-- GEOS-Chem style sheet -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+<TITLE>GAMAP Online User's Guide</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="FF0000" HLINK="#FFFF00">
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_3.html">Previous</A> | <A HREF="Chapter_5.html">Next</A> | <a href="Chapter_4.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p><A NAME="4"></a><span class="size24bi">4. 
+  Using GAMAP</span></p> 
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="4.1"></a>4.1. Quick start</p>
+<p align="justify">Follow the 
+  procedure below to start using GAMAP right away! Please refer to <a href="Chapter_6.html">Chapter 
+  6</a> for more detailed information on the following GAMAP input files: <tt>gamap.defaults</tt>, <tt>tracerinfo.dat</tt>, and <tt>diaginfo.dat</tt>.  These files describe how you can customize GAMAP for your needs.</p>
+<blockquote>
+  <table width="95%" border="0" cellpadding="5" cellspacing="5">
+    <tr align="left" valign="top"> 
+      <td width="4%">1.</td>
+      <td>Start 
+        IDL by typing<span class="courier16"> idl </span>at the Unix command prompt.</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td width="4%" >&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td width="4%" >2.</td>
+      <td > 
+        <p align="justify">If you desire to 
+          display more than one plot per page, use the <a href="by_alphabet/gamap_m.html#MULTIPANEL" target="_blank">MULTIPANEL</a>          routine to specify the number of rows and columns of graphical output. 
+          For example, to put 4 plots on the page, type the following at the IDL&gt; 
+          prompt:</p>
+        <blockquote> 
+          <pre class="courier16">multipanel, 4</pre>
+        </blockquote>
+        <p align="justify">This will create 
+          a page layout with 2 rows and 2 columns. If you you want to specify 
+          a page layout with 3 rows and 2 columns of plots, type:</p>
+        <blockquote> 
+          <pre class="courier16">multipanel, rows=3, cols=2</pre>
+        </blockquote>
+        <p align="justify">It is not necessary 
+          to call MULTIPANEL 
+          if you only want to display one plot per page.</p>
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td width="4%" >&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>3.</td>
+      <td> 
+        <p align="justify">Type<span class="courier16"> gamap </span>at the 
+          IDL&gt; command 
+          line. GAMAP will display the following greeting message with the current 
+          version number:</p>
+        <pre class="courier16">=============================================================
+   WELCOME  TO  G A M A P  ----- Version 2.19, Dec 2015
+   
+   Global Atmospheric Modeling (output) Analysis Package
+   Martin Schultz and Bob Yantosca, Harvard University
+=============================================================
+</PRE>        
+        <p align="justify">This 
+          message will only be displayed the first time you start GAMAP.</p>
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>4.</td>
+      <td> 
+        <p align="justify">GAMAP 
+          will now ask you to select a data file. If you do not specify a file 
+          name via the FILENAME 
+          keyword (see below) GAMAP will pop open a dialog box and ask you to 
+          click on a file.</p>
+        <p align="justify">GAMAP 
+          supports the following file types:</p>
+        <ul>
+          <li>ASCII punch files 
+            (i.e. GISS&ndash;II or GISS&ndash;II&ndash;PRIME model output)</li>
+          <li>Binary punch 
+            files (i.e. <a href="../geos/index.html" target="_blank">GEOS&ndash;Chem</a> 
+            model output)</li>
+          <li>GEOS&ndash;Chem 
+            met field files</li>
+          <li>netCDF files 
+            from GMI (Global Modeling Initiative)</li>
+          <li>netCDF files 
+            created by GAMAP helper routine 
+            bpch2nc.pro</li>
+          <li>netCDF files 
+            adhering to the <a href="http://ferret.wrc.noaa.gov/noaa_coop/coop_cdf_profile.html" target="_blank">COARDS</a> 
+            convention</li>
+          <li>HDF4&ndash;EOS 
+            gridded data files (especially met field files from GMAO)</li>
+        </ul>
+        <p align="justify">Binary 
+          punch files contain the model name and grid resolution information internally. 
+          Upon reading a binary punch file, GAMAP uses this model name and grid 
+          resolution to information automatically determine the dimensions of 
+      the data blocks stored inside the file. netCDF and HDF4-EOS files contain complete metadata about the contents of the file.</p></td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>5. </td>
+      <td> 
+        <p align="justify">At 
+          this point, GAMAP will read the complete block header information from 
+          this file and display the available records. You will see a listing 
+          similar to this:</p> 
+          <pre class="courier14">       CATEGORY ILUN  TRCNAME    TRC            UNIT      TAU0 DATE        DIMENSIONS
+   1 : DAO-FLDS   20           11001            W/m2 179664.00 2005070100   72  46   1
+      
+   1 : BIOBSRCE   20     NOx   45001       mol/cm2/s 179664.00 2005070100   72  46   1 
+   2 : BIOBSRCE   20      CO   45004       mol/cm2/s 179664.00 2005070100   72  46   1 
+   3 : BIOBSRCE   20    C2H6   45021      molC/cm2/s 179664.00 2005070100   72  46   1 
+   4 : BIOBSRCE   20    PRPE   45018      molC/cm2/s 179664.00 2005070100   72  46   1 
+    ...  
+ 201 : ANTHSRCE   20     NOx    1001       mol/cm2/s 179664.00 2005070100   72  46   1 
+ 202 : ANTHSRCE   20      CO    1004       mol/cm2/s 179664.00 2005070100   72  46   1 
+ 203 : ANTHSRCE   20    PRPE    1018      molC/cm2/s 179664.00 2005070100   72  46   1 
+ 204 : ANTHSRCE   20    C3H8    1019      molC/cm2/s 179664.00 2005070100   72  46   1 
+
+Enter S as first character to save data blocks.
+Select data records. Example: 1,3-9,20
+(default : 1, Q=Quit, S=Save) &gt;&gt;</pre>
+<p align="justify">The TAU0  values define the model time in hours since 1985 (GEOS-Chem) or hours since 1980 (GISS). The corresponding <tt>YYYYMMDDhh</tt> values are also shown. You can also use <tt><a href="by_alphabet/gamap_n.html#NYMD2TAU (FUNCTION)" target="_blank">nymd2tau.pro</a></tt> to convert date values (<tt>YYYYMMDD</tt>, <tt>hhmmss</tt>) to tau values, or <tt><a href="by_alphabet/gamap_t.html#TAU2YYMMDD (FUNCTION)" target="_blank">tau2yymmdd.pro</a></tt> 
+for the inverse.</p>
+<p align="justify">You can now select one or more records to be displayed. Some examples: 
+        </p> 
+        <blockquote> 
+          <pre class="courier16">1	(chooses only first record) 
+2,5 (select entries 2 and 5) 
+1-4 (select entries 1 through 4) 
+1-4,7,10-12 </pre>
+        </blockquote>
+        <p align="justify"> If 
+          instead you type an s or an S as the first character, such as:
+        <blockquote> 
+          <pre class="courier16">S1-204</pre>
+        </blockquote>		
+        <p align="justify">then 
+          GAMAP will save records 1 to 204 into a binary punch file instead of 
+          plotting them. You will be then prompted (via dialog box) to supply 
+          a name for the binary punch file.</p> 
+        <p align="justify">Another 
+          note: GAMAP will save the data block range from each call. For example, 
+          if you saved the first 204 data blocks, as described in the above example, 
+          then the next time you start GAMAP, it will ask you if you want to plot 
+          data blocks 1 through 204. This allows you to just hit RETURN 
+          if you want to accept the same data block range as last time. </p>
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td></td>
+      <td></td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>6.</td>
+      <td> 
+        <p align="justify">Once 
+          you have selected a data block or range of data blocks, GAMAP will then 
+          ask you to define a longitude, latitude, and altitude range which will 
+          be used to construct the plots.</p>
+        <p align="justify">GAMAP 
+          will ask you for the altitude range first:</p>
+        <blockquote> 
+          <pre class="courier16">Enter level or level range 
+ (default : 1..47, Q=Quit) &gt;&gt;</pre>
+        </blockquote>
+        <p align="justify">You 
+          may do one of the following things:</p>
+        <UL>
+          <LI>You can hit RETURN 
+            to accept the default values.</LI>
+          <LI>If you want 
+            to specify a single level, type one number and hit RETURN.</LI>
+          <LI>If you want 
+            to specify a range of numbers, type two numbers separated by a space 
+            and then hit RETURN.</LI>
+        </UL>
+        <p align="justify">After 
+          you have entered GAMAP will ask you for the longitude range: </p>
+        <blockquote> 
+          <pre class="courier16">Enter longitude or longitude range 
+ (default : -182.50..177.50, Q=Quit) &gt;&gt;</pre>
+        </blockquote>
+        <p align="justify">You 
+          can do the same things as above: accept the defaults, specify a single 
+          longitude, or specify a range of longitudes.</p> 
+        <p align="justify">Finally, 
+          GAMAP will ask you for the latitude range:</p> 
+        <blockquote> 
+          <pre class="courier16">Enter latitude or latitude range 
+ (default : -88..88, Q=Quit) &gt;&gt;</pre>
+        </blockquote>
+        <p align="justify">And 
+          once more you can proceed as described above.</p> 
+        <p align="justify">GAMAP 
+          will save your selections so that the next time you call GAMAP these 
+          will become the default values. This makes it easy to create identical 
+          plots &#151; you can just keep hitting RETURN 
+          to accept the defaults.</p> 
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>7.</td>
+      <td> 
+        <p align="justify">GAMAP 
+          will then tell you how many dimensions your selected data block has, 
+          and it will ask whether you want to perform an average or total operation 
+          on either of these dimensions:</p>
+        <blockquote> 
+          <pre class="courier16">% Selected data is 2-D [ Longitude,Latitude ]. 
+Do you want to average or total the data? 
+(0=No averaging, 1=lon, 2=lat, 4=alt, 8=Total, 
+   Q=Quit, Default=0)
+</pre>
+        </blockquote>
+        <p align="justify"> The 
+          values displayed as options are binary flags. You can combine them as 
+          you wish by adding them together. Example: 3 will average over longitude 
+          and latitude, 12 will total over altitude. Be aware that you lose one 
+          data dimension for each average or total operation you select. GAMAP 
+          can handle any number of dimensions from 0 to 3. If you end up with 
+          0-D (one point), you will get an average or total value over the region 
+          that you selected which will be printed on the screen (no plot is produced). 
+          A 1-D data set results in a line plot, and a 3-D data set causes GAMAP 
+          to display a 3-D isocontour surface.</p> 
+        <p align="justify">In 
+          addition to the isopleth map, GAMAP gives you many are 2-D plot options 
+          as well: </p>
+        <blockquote> 
+          <pre class="courier16">0 = B/W Contour lines
+1 = Colored contour lines 
+2 = Filled contours 
+3 = Smooth Pixel Plot 
+4 = Coarse Pixel Plot &lt;---  Default </pre>
+        </blockquote>
+        <p align="justify"> The 
+          default is to make coarse pixel plots which have a "boxy" quality to 
+          them. Coarse pixel plots also save memory when creating PostScript or 
+          GIF output. For printed output, we encourage you to try one of the contour 
+          options.</p> 
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>8.</td>
+      <td> 
+        <p align="justify">GAMAP will then 
+          ask you if you want to perform some unit conversion on the data before 
+          the final plot is displayed. You will see a prompt such as this:</p>
+        <blockquote> 
+          <pre class="courier16">Units: ppbv
+Enter new unit for all 
+ (Q=Quit, default: don't touch) &gt;&gt;</pre>
+        </blockquote>
+        <p>If you want to 
+          change the unit from ppbv to pptv, simply type pptv 
+          at the prompt and hit RETURN. 
+        </p>
+        <p align="justify">NOTE: Not all unit 
+          conversions were implemented. GAMAP can handle simple unit conversions 
+          such as pptv to ppbv and vice-versa, or molec/cm2/s to Tg. If you need 
+          to do more complicated unit conversions, it may be worthwhile to write 
+          your own code.</p>
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>9.</td>
+      <td> 
+        <p align="justify">If you have set 
+          up a multi-panel environment before calling GAMAP (Step #2 above), GAMAP 
+          will fill the page with the selected records and start a new page when 
+          you reach the maximum number of plots per page. </p>
+        <p align="justify">If you want to 
+          combine different plots on one page you will have to call GAMAP several 
+          times (in this case you have to manually open and close the postscript 
+          device if you want to produce postscript plots). In the multi-panel 
+          environment, no animation is possible. </p>
+		<p align="justify">Note: 
+          for the first plot, a window will be opened automatically if you haven't 
+          done so before. Otherwise GAMAP will plot into the current window (which 
+          allows you to display various model results together by changing the 
+          current window with </p> 
+        <blockquote> 
+          <pre class="courier16">window, <var>N</var> [, <var>options</var>]</pre>
+        </blockquote>
+      </td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr align="left" valign="top"> 
+      <td>10.</td>
+      <td> 
+        <p align="justify">If you wish to 
+          create animations, then you must have turned off the multipanel environment 
+          with:</p>
+        <blockquote> 
+          <pre class="courier16">multipanel, /off</pre>
+        </blockquote>
+        <p align="justify">Then start GAMAP 
+          again and follow steps 3-8 as listed above and select all of the data 
+          blocks that you wish to include in the animation.</p>
+        <p align="justify">At present, the 
+          best way to create an animation is to have GAMAP save out each individual 
+          plot to a different graphics file format (such as GIF, JPEG, or PNG). 
+          Then you can use an external editor (such as <span class="courier16">whirlgif</span>) to link the individual 
+          images into a movie file.</p>
+        <p align="justify">Let's assume that your gamap.defaults file (Section 6) is set up to save individual frames to GIF files. 
+        </p>
+        <p align="justify">NOTE: 
+          GIF file format support was removed in IDL version 5.4, but since has 
+          been restored in IDL versions 6.2 and higher. If you are using an older 
+          version of IDL we suggest that you upgrade to the most recent version 
+          so that you can take advantage of GIF file support.</p>
+        <p align="justify">You 
+          may also edit your gamap.defaults 
+          file to save to other file types as well. Or you can force GAMAP 
+          to ask you to save out to specific file type from the command line. 
+          For example:</p>
+        <blockquote> 
+          <pre class="courier16">gamap, /do_gif</pre>
+        </blockquote>
+        <p align="justify">will force GAMAP to ask you if you want to save each frame as a GIF file.</p>
+        <p align="justify">After you have 
+          selected the units for all of your data blocks (step 9 above), GAMAP 
+          will ask you:</p>
+        <blockquote> 
+          <pre class="courier16">Save frames to GIF files (Y/N/Q) [N] :</pre>
+        </blockquote>
+        <p align="justify">If 
+          you type Y then GAMAP 
+          will ask you to specify the GIF file name:</p>
+        <blockquote> 
+          <pre class="courier16">GIF File Name (default : frame%NNN%, Q=Quit ) &gt;&gt;</pre>
+        </blockquote>
+        <p align="justify">If 
+          you are only going to save a single GIF file, then you can type a filename 
+          such as &quot;myfile&quot; 
+          and GAMAP will save the image on the screen to this GIF file. (The *.gif 
+          extension) will be added automatically by GAMAP.</p>
+        <p align="justify">If 
+          you have chosen more than one data block to save to a GIF file, then 
+          it is recommended to use the filename  
+          <span class="courier16">frame%NNN%</span>  (the <span class="courier16">*.gif</span>          extension will also be automatically added by GAMAP.) When saving each 
+          file name, GAMAP will replace the text <span class="courier16">%NNN%</span>          with the actual frame number. For example, if you choose <span class="courier16">frame%NNN%</span>          as your GIF file name, then GAMAP will create 10 GIF files named 
+          <span class="courier16">frame001.gif</span>, <span class="courier16">frame002.gif</span>, <span class="courier16">frame003.gif</span>, ...,<span class="courier16"> frame010.gif</span>.</p>
+        <p align="justify">If you save images 
+          to GIF format files, then you can use the 
+          whirlgif program to link several frames into an animated GIF 
+          file. (Whirlgif is available on the Internet as Unix freeware). Let's 
+          assume you have a series of files named <span class="courier16">frame001.gif</span>, 
+          <span class="courier16">frame002.gif</span>, etc. To combine these into a single animated GIF 
+          image named animation.gif 
+          , type the following at the Unix command prompt:</p>
+        <blockquote> 
+          <pre class="courier16">whirlgif -loop -time 0.010 -o animation.gif frame*gif</pre>
+        </blockquote>
+        <p align="justify">This will cause 
+          whirlgif to create an animatable GIF with a 1 second delay.</p>
+      </td>
+    </tr>
+  </table>
+</blockquote>
+<p align="justify"> This should 
+  almost get you going. Feel free to explore the various options, but then 
+  read on to learn about the most important GAMAP command line options! </p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p align="justify" class="size20bi"><a name="4.2"></a>4.2 Important GAMAP command line options</p>
+<p align="justify"> Here are some of the most often-used GAMAP command line options.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.1"></a>4.2.1 /NOFILE, FILENAME</p>
+<p align="justify"> Perhaps the most important keyword to GAMAP is<em> <strong>/NOFILE</strong></em>. If you set this keyword, GAMAP will try to work with the records that you have read previously and not prompt you for another data file. If nothing was read in before, the <em><strong>/NOFILE</strong></em> option is ignored. With <strong><em>/NOFILE</em></strong> you have all records available from all files that you opened during this GAMAP session. Without this keyword you will only get the records displayed that belong to the file you select. Use the <strong><em>FILENAME</em></strong> keyword to specify a data file or override the default filemask in <tt>gamap.defaults</tt>.</p>
+<p align="justify"> <strong><em>/NOFILE</em></strong> overrides <strong><em>FILENAME</em></strong>, but <strong><em>FILENAME</em></strong> will be used if you have not loaded any data previously.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.2"></a>4.2.2 DIAGN, TRACER, TAU0, DATE</p>
+<p align="justify">Use these 
+  keywords and parameters to restrict the data records to choose from. <strong><em>DIAGN</em></strong> is a parameter (the only one) and can be a diagnostic name or number (see <A HREF="Chapter_6.html#6.8">Chapter 6.8: The DIAGINFO structure</A>). </p>
+<p align="justify"><strong><em>TRACER</em></strong> is a tracer number or vector containing multiple tracer numbers. Some diagnostics 
+  use tracer numbers offset by multiples of 100 or 1000 (see tracerinfo.dat in section XX). 
+  GAMAP will only interpret the last two digits and display all diagnostics with 
+this tracer unless you also specify <em><strong>DIAGN</strong></em>. </p>
+<p align="justify">With <em><strong>TAU0</strong></em> and <em><strong>DATE</strong></em> you can identify individual time steps. <em><strong>DATE</strong></em> must be a (long) integer value of form YYYYMMDD.  For example you can type:</p>
+<blockquote> 
+  <pre class="courier16">gamap, date=20100301L</pre>
+</blockquote>
+<p align="justify">making sure 
+  to specify 20100301 as a long integer. If you use <em><strong>DATE</strong></em>, 
+  the hour is always assumed to be 00 GMT. If you want to specify other hours 
+  you must use the TAU0 keyword. 
+  You can pass the result from function NYMD2TAU 
+  as follows: </p>
+<blockquote>
+  <pre class="courier16">gamap, tau0=nymd2tau( 20100301,140000 )</pre>
+</blockquote>
+<p align="justify"> (This example 
+  will select a data record for 1400 GMT on March 3, 2010.)</p>
+<p align="justify"> CAUTION: Currently, the conversion from <em><strong>DATE</strong></em> to <em><strong>TAU0</strong></em> assumes the GEOS&ndash;Chem model as default (i.e. <strong><em>TAU0</em></strong> = 0 is 00:00 GMT on 1 Jan 1985). For correct results with the GISS models, you must use the NYMD2TAU function as shown above with the /GISS 
+  keyword </p>
+<p align="justify"> <em><strong>TRACER</strong></em>, <em><strong>TAU0</strong></em> and <em><strong>DATE</strong></em> may be either be single values or vectors. </p> 
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.3"></a>4.2.3 YRANGE, /AUTORANGE</p>
+<p align="justify"> Use these 
+  keywords to specify the data range to be used for colorbars in pixel plots (and 
+  for 1-D plots). If you select more than one record, GAMAP will automatically 
+  turn <em><strong>/AUTORANGE</strong></em> on unless 
+  you are working in a multi-panel environment. YRANGE 
+  must be a 2-element vector with min and max value to plot.</p>
+<p align="justify">For example, 
+  if you want to restrict the plot range of a CO tracer between 0 and 300 ppbv, 
+  type:</p>
+<blockquote>
+  <pre class="courier16">YRANGE = [0, 300]</pre>
+</blockquote>
+<p align="justify">and that 
+  will cause the lowest color level to be 0 ppbv and the highest color level to 
+  be 300 ppbv. </p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.4"></a>4.2.4 /LOG, C_LEVEL</p>
+<p align="justify"> The <em><strong>/LOG</strong></em> flag is not an intrinsic GAMAP keyword but simply passed on to ctm_plot.pro 
+  (like all other keywords that are not handled explicitly by gamap.pro). 
+  It has only effect in 1-D and pixel plots. In contour plots you can use  
+  <em><strong>C_LEVEL</strong></em> to specify your own contour levels. Default is to use 
+  logarithmically spaced levels at 1, 2, 5, 10, etc. or a linear set of 9 levels 
+  if your data vary over less than a factor of 10. A typical example would be 
+  (for CO): </p>
+<blockquote>
+  <pre class="courier16">gamap, /nofile, tracer=4, c_level=findgen(20)*5+40</PRE>
+</blockquote>
+<p align="justify"> (This creates 
+  contour levels at 40, 45, 50, 55, ..., 135)  
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.5"></a>4.2.5 /POLAR</p>
+<p align="justify"> Set this 
+  keyword to produce polar stereographic plots with GAMAP. <em><strong>/POLAR</strong></em> will force the longitude range to -180..180 
+  and the latitude range to extend to one of the poles. Note that polar 
+  plots only work with contours (however, if you use filled contours with about 
+  30 contour levels (specified via the <em><strong>C_LEVEL</strong></em> keyword), the plot will look almost like a smoothed pixel plot!</p> 
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.6"></a>4.2.6 /PS, OUTFILENAME, /TIMESTAMP</p>
+<p align="justify"> The <em><strong>/PS</strong></em> switch forces GAMAP to produce postscript output, and <em><strong>OUTFILENAME</strong></em> can be used to specify the postscript filename (it overrides the default in <tt>gamap.defaults</tt>). 
+</p>
+<p align="justify">If <em><strong>/PS</strong></em> is set, no plot will be displayed on the screen, but GAMAP will plot directly 
+  into the postscript file. <em><strong>/PS</strong></em> is automatically turned off when you select multiple records in the single-panel 
+  mode, i.e. when GAMAP creates an animation sequence. <em><strong>/PS</strong></em> and <em><strong>OUTFILENAME</strong></em> are also ignored when the current device is already set to `PS'. This allows 
+  to create &quot;heterogeneous&quot; multi-panel plots with several calls to 
+  GAMAP.</p> 
+<p align="justify"> <em><strong>/TIMESTAMP</strong></em> forces to set or omit a timestamp label on postscript plots and overrides the default setting in <I>gamap.defaults</I>. Use <em><strong>TIMESTAMP=1</strong></em> (or <em><strong>/TIMESTAMP</strong></em>) to force a timestamp label, or <em><strong>TIMESTAMP=0</strong></em> to omit it. GAMAP uses the standard label from close_device.pro which consists of user ID and date.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.7"></a>4.2.7 /DO_GIF, GIFFILENAME, <br>
+  /DO_JPEG, JPEGFILENAME, <br>
+  /DO_PNG, PNGFILENAME,<br>
+  /DO_BMP, BMPFILENAME, <br>
+  /DO_TIFF, TIFFFILENAME, <br>
+  FRAME0</p>
+<p align="justify"> These keywords 
+  override the respective settings in<span class="courier16"> gamap.defaults<I>.</I></span> 
+</p>
+<p align="justify"><strong><em>/DO_GIF</em></strong>, 
+  <em><strong>/DO_JPEG</strong></em>,<em> <strong>/DO_PNG</strong></em>, <em><strong>/DO_BMP</strong></em>, <em><strong>/DO_TIFF</strong></em> will cause gamap to save to GIF, 
+  JPEG, PNG, BMP, and TIFF graphics file formats, respectively.</p> 
+<p align="justify"><strong><em>GIFFFILENAME</em></strong>, <strong><em>JPEGFILENAME</em></strong>, 
+  etc. are used to specify the file name of the GIF, JPEG, etc. output file.  <em><strong>GIFFILENAME</strong></em>, 
+  <em><strong>JPEGFILENAME</strong></em>, etc. may contain one of the following variables which will 
+  be replaced by the current frame number:<span class="courier16"> %N%, 
+  %NN%, %NNN%, %NNNN%, %NNNNN%.</span> </p>
+<p align="justify">To start 
+  with a specific frame number instead of 1, specify that with the  
+   <em><strong>FRAME0</strong></em> keyword. </p> 
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.8"></a>4.2.8 RESULT</p>
+<p align="justify">The <em><strong>RESULT</strong></em> keyword returns a structure containing the last selected subset of data with 
+  the X and Y coordinate vectors. This is sometimes useful if you want to look 
+  for a specific value in a plot, or to do further processing on a data block 
+  that you just plotted. </p>
+<p align="justify"> For example, 
+  if you call GAMAP as follows:</p>
+<blockquote>
+  <pre class="courier16">gamap, filename=&quot;myfile.bpch&quot;, tra=1, tau0=144600D, result=R</pre>
+</blockquote>
+<p align="justify">Then R 
+  will be a structure with the following tag names:</p> 
+<blockquote>
+  <pre class="courier16">** Structure &lt;104daa08&gt;, 3 tags, length=13136, refs=1:
+  X                FLOAT     Array[72]
+  Y                FLOAT     Array[44]
+  DATA             FLOAT     Array[72,44]</pre>
+</blockquote>
+<p align="justify">Note that 
+  If you select more than one data record in GAMAP, RESULT will only return the 
+  data block from the last selection. </p> 
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.9"></a>4.2.9 TOPTITLE, TTSIZE</p>
+<p align="justify"> <em><strong>TOPTITLE</strong></em> allows you to specify string that wil appear centered on the top of each page 
+of PostScript output. </p>
+<p align="justify"><strong><em>TTSIZE</em></strong> can be used to control the character size of TOPTITLE. </p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.2.10"></a>4.2.10 /APPEND</p>
+<p align="justify"> Setting 
+  the <em><strong>/APPEND</strong></em> keyword will cause GAMAP to append to an existing binary punch file when saving data blocks to disk rather than creating a new file from scratch. Here is a quick example. Type:</p> 
+<blockquote>
+  <pre class="courier16">gamap, file='myfile.bpch', /append</pre>
+</blockquote>
+ You will then be shown the 
+list of data blocks. Let's pick the first one:  
+<blockquote> 
+  <pre class="courier16">Enter S as first character to save data blocks.<br>Select data records. Example: 1,3-9,20 <br>
+(default : 1, Q=Quit, S=Save) &gt;&gt; S1</pre>
+</blockquote>
+<p align="justify">A dialog box will pop up asking you to supply the name of the new binary punch file which will contain the first data block. Type in the file name, hit RETURN, and then click on OK. The data block you just selected is now appended to the currently open binary punch file. </p>
+ 
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"> <A NAME="4.3"></a>4.3 
+  Multi-panel plots
+<p align="justify"> GAMAP uses 
+  the <a href="by_alphabet/gamap_m.html#MULTIPANEL" target="_blank">MULTIPANEL</a> routine  for handling of multipanel plots. It automatically 
+  detects whether you turned the multipanel environment on or off and acts accordingly 
+  (in single-panel mode, more than one selected record start an animation). 
+  To set-up a multipanel environment, type either </p> 
+<blockquote>
+  <pre class="courier16">multipanel, nplots=N
+gamap</pre>
+</blockquote>
+<p align="justify">or, simply, </p>
+<blockquote>
+  <pre class="courier16">multipanel, N
+gamap</PRE>
+</blockquote>
+<p align="justify"> N is the number of panels you want to display on one page. 
+</p>
+<p align="justify"> MULTIPANEL will automatically compute the number of rows and columns from the number 
+  of plots so that the result approximates a square. Each time you plotted 
+  N panels on a page it will be erased. Note that N does not need to be 
+  a factor number.</p>
+<p align="justify"> Alternatively 
+  you can explicitely specify the number of rows and columns with the rows and 
+  cols keywords. To set up a page for 3 rows and 2 columns of plots, type: 
+</p>
+<blockquote>
+  <pre class="courier16">multipanel, rows=3, cols=2</pre>
+</blockquote>
+<p align="justify">For further 
+  options (e.g. margin keywords), see the documentation of multipanel.pro (in 
+  IDL, type usage,'multipanel'). 
+</p>
+<p align="justify"> To return 
+  to single-panel mode, type </p> 
+<blockquote>
+  <pre class="courier16">multipanel, /off</pre>
+</blockquote>
+<p align="justify">To see an 
+  example of how to create a multi-panel map plot, please visit <a href="Chapter_8.html#8.6">Chapter  
+  8.6</a>.</p>
+<p align="justify">If you want 
+  to produce PostScript output with a &quot;heterogeneous&quot; multipanel plot 
+  (one that requires more than 1 call to GAMAP), you have to open your PostScript 
+  file before the first call to GAMAP. GAMAP will notice that it is already working 
+  on the PostScript device and not attempt to open a new file. Don't forget to 
+  close the file after you are done. Please note that you don't see any output 
+  on the screen if you run GAMAP with a previously opened postscript device. See 
+  <A HREF="Chapter_8.html#8.11">Chapter 8.11</A> for an example of how to do this. 
+</p> 
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="4.4"></a>4.4 Calling CTM_PLOT directly instead of using the GAMAP interface </p>
+<p align="justify">GAMAP routine <a href="by_alphabet/gamap_c.html#CTM_PLOT" target="_blank">CTM_PLOT</a> is meant to provide a general plot &quot;wrapper&quot; for the GAMAP package. In fact, GAMAP is just a user-friendly interface to CTM_PLOT (and the underlying routines TVMAP, TVPLOT, COLORBAR, CTM_GET_DATABLOCK, etc.).</p>
+<p align="justify">There may be times when it is more convenient to call CTM_PLOT directly. For example, you may wish to write an IDL routine to create a plot but don't want to go through the menu-driven user interface of the main GAMAP routine. CTM_PLOT can be used to create many different types of plots.  It can also handle visualization of 3D isocontour surfaces. 2-D plots can be produced as &quot;pixel&quot; plots or contour plots with various options. For pixel plots, a colorbar is automatically added below the plot. Labelling is provided automatically but easily adjustable to your needs.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.4.1"></a>4.4.1 General usage</p>
+<blockquote>
+  <pre class="courier16">ctm_plot [,diagn] [,keywords]</pre>
+</blockquote>
+<p>where diagn is either a diagnostics number or category name (as defined in the diaginfo.dat file) and keywords control the appearance of the plot as well as the data to load.For a complete listing of the keywords to CTM_PLOT, type:</p>
+<blockquote>
+  <pre class="courier16">usage, 'ctm_plot'</pre>
+</blockquote>
+<p>at the IDL prompt.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.4.2"></a>4.4.2 An example with CTM_PLOT</p>
+<p>Let us say that you want to plot ozone concentrations from a GEOS-CHEM output file for July 1, 2001. You would like to plot the data at the surface. Simply type:</p>
+<blockquote>
+<pre class="courier16">; Use WHITE-GREEN-YELLOW-RED custom colortable
+;
+MyCt, /WhGrYlRd
+
+
+; Define the file name
+;
+FileName = &quot;~/IDL/gamap2/data_files/ctm.bpch.examples&quot;
+
+
+; Plot surface Ox for July 2003
+;
+CTM_Plot, 'IJ-AVG-$', FileName=FileName,         $
+   Tracer=2,      Tau0=144600D,  /Sample,        $
+   /Isotropic,    /CBar,         /Grid,          $
+   /Countries,    /Coasts,       Lon=[-180,180], $
+   Lat=[-88,88],  Lev=1,         Div=ColorBar_NDiv( Max=6 )</PRE>
+</blockquote>
+<p>This will produce the following plot: </p>
+<p align="center"><img border="1" src="img/fig_4_4_2.png" width="640" height="464"></p>
+<p align="justify">Note that for pixel-box plots, sometimes it is better to use a smaller number of colors, so that it is easier to translate a color into a value by looking at the plot.</p>
+<p align="justify">In the above example, we have used the COLORBAR_NDIV function (see Section 3.4) to ensure that the color bar tickmarks only occur at the transitions from one color to another.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify"><span class="size16bi"><a name="4.4.3"></a>4.4.3 More examples with CTM_PLOT</span></p>
+<p align="justify">The following examples are taken from the GAMAP example routine <span class="courier16">example_tvmap.pro</span>. These examples illustrate the use of different map projections with CTM_PLOT. Also note how you can use CTM_PLOT to plot data in a region which spans  the International Date Line. </p>
+<pre class="courier16">   ; Resize the window to 755 x 900 pixels
+   ;
+   Open_Device, WinParam=[ 0, 755, 900 ]
+
+
+   ; Define the file name
+   ;
+   FileName = &quot;~/IDL/gamap2/data_files/ctm.bpch.examples&quot;
+
+
+   ; Set up for 3 rows and 2 columns per page
+   ; 
+   MultiPanel, rows=3, cols=2
+
+
+   ; 1st panel: Plot a "coarse pixel" lon-lat plot for the whole globe.
+   ; NOTE: Exclude GEOS-Chem half-sized polar boxes.  Uses the default
+   ; cylindrical map projection.
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Sample,           /Isotropic,    /CBar,                      $
+      /Grid,             /Continents,   Lon=[-180,180],             $
+      Lat=[-88,88],      Lev=1,         Div=ColorBar_NDiv( Max=5 ), $
+      title='DEFAULT PLOT',             _EXTRA=e
+
+
+   ; 2nd panel: Similar to 1st panel, but zoom in onto the
+   ; region bounded by corners at (10S,40S) and (40N,160E).
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Sample,           /Isotropic,    /CBar,                      $
+      /Grid,             /Continents,   Lon=[-10,160],              $
+      Lat=[-40,40],      Lev=1,         Div=ColorBar_NDiv( Max=5 ), $
+      title='DEFAULT PLOT ZOOM',        _EXTRA=e
+
+
+   ; 3rd panel: Similar to 1st panel, but in this case, use the
+   ; Mollweide map projection.  Also suppress X-axis labels
+   ; with the /NOGXLABELS keyword.  Use the new /HORIZON feature<br>   ; to draw a map horizon around the globe, since the Mollweide<br>   ; map projection is not rectangular.
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Sample,           /Isotropic,    /CBar,                      $
+      /Grid,             /Continents,   Lon=[-180,180],             $
+      Lat=[-88.,88],     Lev=1,         Div=ColorBar_NDiv( Max=5 ), $
+      title='Mollweide', /Mollweide,    /NoGXLabels,                $
+      /Horizon,          _EXTRA=e
+
+   
+   ; 4th panel: Similar to 3rd panel, but this time let's plot 
+   ; the map across the International Date Line
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Sample,           /Isotropic,    /CBar,                      $
+      /Grid,             /Continents,   Lon=[90,-100],              $
+      Lat=[-40.,40],     Lev=1,         Div=ColorBar_NDiv( Max=5 ), $
+      /Mollweide,        Rectangle=0,   _EXTRA=e,                   $
+      Title='Mollweide ZOOM & across date line - COARSE' 
+
+
+   ; 5th panel: Similar to 4th panel, but this time create a "smooth"
+   ; pixel plot.  The plot doesn't look as boxy as the "coarse" pixel
+   ; plot.
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Isotropic,        /CBar,         /Grid,                      $
+      /continents,       Lon=[90,-100], Lat=[-40,40],               $
+      Lev=1,             Rectangle=0,   Div=ColorBar_NDiv( Max=5 ), $
+      /Mollweide,        _EXTRA=e,                                  $
+      Title='Mollweide ZOOM & across date line - SMOOTH'
+
+
+   ; 6th panel: Create a plot over the continental US domain,
+   ; using the Lambert map projection. 
+   ;
+   CTM_Plot, 'IJ-AVG-$',                                            $
+      FileName=FileName, Tracer=2,      Tau0=144600D,               $
+      /Sample,           /Isotropic,    /CBar,                      $
+      /Grid,             /Continents,   Lon=[-180,180],             $
+      lat=[-88, 88],     Lev=1,         Div=ColorBar_NDiv( Max=5 ), $
+      /CONUS,            /CbVertical,   Title='Default CONUS',      $
+      _EXTRA=e
+</pre>
+<p align="center"><img src="img/fig_4_4_3.png" width="755" height="900" border="1"></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="4.5"></a>4.5 Calling CTM_OVERLAY to plot data atop a map</p>
+<p align="justify">GAMAP routine <a href="by_alphabet/gamap_c.html#CTM_OVERLAY" target="_blank">CTM_OVERLAY</a> allows you to create an image map, and then to overlay either lines (such as a flight track) or individual station data points atop the map.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.5.1"></a>4.5.1 General usage</p>
+<blockquote>
+  <pre class="courier16">ctm_overlay, data, xmid, ymid, trackd, trackx, tracky [,keywords]</pre>
+</blockquote>
+<p>where </p>
+<ul>
+  <li>DATA is the data array for the image map, </li>
+  <li>XMID and YMID are the lon and lat centers corresponding to DATA</li>
+  <li>TRACKD is the data to be overlaid atop the image map, and</li>
+  <li>TRACKX and TRACKY are the lon and lat centers corresponding to TRACKD.</li>
+</ul>
+<p>For a complete listing of the keywords to CTM_OVERLAY, type:</p>
+<blockquote>
+  <pre class="courier16">usage, 'ctm_overlay'</pre>
+</blockquote>
+<p>at the IDL prompt.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="4.5.2"></a>4.5.2 An example with CTM_OVERLAY</p>
+<blockquote>
+  <pre class="courier16">; Use WHITE-RED custom colortable<br>;<br>MyCt, /WhRd
+
+
+; Set up for 3 plots on a page
+;
+Open_Device, WinParam=[ 0, 640, 512 ]
+MultiPanel, /off
+
+
+; Remove existing entries in the global GAMAP common blocks
+; (and also clean up all pointer and leftover memory!)
+;
+CTM_Cleanup
+
+
+; Define some plot parameters
+;
+FileName = &quot;~/IDL/gamap2/data_files/ctm.bpch.examples&quot;
+DiagN    = &quot;IJ-AVG-$&quot;
+Tracer   = 2 
+
+
+; Get the data block for Ox from the file (as in Example 1)
+;
+CTM_Get_Data, DataInfo, DiagN, $
+  FileName=FileName, Tracer=Tracer, /First,_EXTRA=e
+
+
+; Extract data from the DATAINFO structure
+;
+Data = *( DataInfo[0].Data )
+
+
+; Extract MODELINFO &amp; GRIDINFO structures from DATAINFO
+;
+GetModelAndGridInfo, DataInfo[0], InType, InGrid
+
+; Get lon &amp; lat arrays
+;
+XMid = InGrid.XMid
+YMid = InGrid.YMid
+
+
+; As in EXAMPLE 1, don't plot data near the poles.
+; Also just take the data at the surface.
+Ymid = YMid[1:InGrid.JMX-2]
+Data = Data[*,1:InGrid.JMX-2,0]
+
+
+; Define &quot;fake&quot; station data for demo
+; along the equator between 60W and 60E
+; (of course if you have real data, use that!)
+;
+Ind    = Where( XMid ge -60 AND XMid le 60, N )
+TrackD = Findgen(N) + 30
+TrackY = Fltarr(N) + 60
+TrackX = Xmid[Ind]
+
+
+; Call CTM_OVERLAY with TVMAP keywords
+; but also pass the station data points
+;
+Title='Pixel map overlaid w/ station data points'
+
+CTM_OverLay,                 $
+  Data, XMid, YMid,          $  ; Specify data &amp; lon/lat arrays
+  TrackD, TrackX, TrackY,    $  ; Specify station data and lon/lat arrays
+  /Sample,                   $  ; Create a &quot;boxy&quot; pixel plot
+  /Isotropic,                $  ; Use aspect ratio from pixel plot
+  /Grid,                     $  ; Plot grid lines
+  /Countries, /Coasts, /USA, $  ; Plot coasts, country &amp; state boundaries
+  /CBar,                     $  ; Specify a color bar w/ up to 
+  Div=ColorBar_NDiv( Max=6 ),$  ;   6 divisions -- at color boundaries!
+  Min_Val=1e-20,             $  ; Set any data below 1e-20 to WHITE
+  T_Symbol=1,                $  ; Make the symbols FILLED CIRCLES
+  SymSize=2,                 $  ; Make the symbol size 2 x NORMAL
+  Title=Title                   ; Specify the plot title</pre>
+</blockquote>
+<p>The above example will produce the following plot:</p>
+<p align="center"><img border="1" src="img/fig_4_5_2.png" width="640" height="512"></p>
+<p align="justify">For more information about other GAMAP routines, please see the manual pages in <a href="Chapter_5.html">Chapter 5</a>. Also be sure to see  list of GAMAP examples in <a href="Chapter_8.html">Chapter 8</a> and on the <a href="http://wiki.geos-chem.org/GAMAP_tips_and_tricks" target="_blank">GAMAP wiki pages</a>.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p align="center" class="size14bi"><A HREF="Chapter_3.html">Previous</A> | <A HREF="Chapter_5.html">Next</A> | <a href="Chapter_4.html" target="_blank">Printable View (no frames)</a></p>
+
+</BODY>
+</HTML>

@@ -1,0 +1,338 @@
+<HTML>
+<HEAD>
+<!-- Style sheet for fonts -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+<TITLE>GAMAP Online User's Guide</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="FF0000" HLINK="#FFFF00">
+  
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_1.html">Previous</A> | <A HREF="Chapter_3.html">Next</A> | <a href="Chapter_2.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size24bi"><A NAME="2"></a>2. GAMAP Installation</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="2.1"></a>2.1 General setup</p>
+<p align="justify"> Before we can use the GAMAP package, we must now ensure that our system is set up to use IDL.  We shall assume that you will use GAMAP on a Unix or Linux system.</p>
+<p align="justify">If you use C-shell (<tt>csh</tt>) or T-shell (<tt>tcsh</tt>), add the following lines to your <span class="courier16"> .cshrc </span>file:</p>
+<blockquote>
+<pre class="courier16"># Location of your "idl_startup.pro" file
+setenv IDL_STARTUP $home/IDL/idl_startup.pro</pre></blockquote>
+<p align="justify">and to accept the changes, type this at the Unix prompt:</p>
+<blockquote><pre class="courier16">source ~/.cshrc </pre></blockquote>
+<P align="justify">If you use Bourne-Again shell (<tt>bash</tt>), then add the these lines to your <tt>.bashrc</tt> file:</p>
+<blockquote>
+  <pre class="courier16">#Location of your "idl_startup.pro" file
+export IDL_STARTUP=$home/IDL/idl_startup.pro</pre></blockquote>
+<p align="justify">and to accept the changes, type this at the Unix prompt:</p>
+<blockquote>
+  <pre class="courier16">source ~/.bashrc </pre></blockquote>
+<p align="justify">Also, we assume that you have created a directory named <span class="courier16">~/IDL </span>in your personal disk space. This directory will be the top-level directory for your IDL source-code programs. We recommend installing the GAMAP package into your<span class="courier16"> ~/IDL </span>directory. This will be discussed in more detail in <a href="#2.2">Chapter 2.2</a>.</p>
+<P align="justify">We will learn more about the<span class="courier16"> idl_startup.pro </span>file in <a href="#2.3">Chapter 2.3</a>. </p>
+<P align="justify">NOTE: Some Windows users have experienced problems with directory paths due to the IDL Workbench, especially running under Windows 7. For this reason, we recommend that you use GAMAP on a Unix/Linux machine if possible. For more information, <a href="http://wiki.geos-chem.org/General_GAMAP_usage#GAMAP_and_IDL_7" target="_blank">see this post</a> and <a href="http://wiki.geos-chem.org/General_GAMAP_usage#Problems_with_Windows_7" target="_blank">also this post</a> on our <a href="http://wiki.geos-chem.org/General_GAMAP_usage" target="_blank">General GAMAP Usage</a> wiki page.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p><A NAME="2.2"></a><span class="size20bi">2.2 Installing the GAMAP directories</span></p>
+<p align="justify"> The GAMAP source code repository has now been migrated from CVS to Git, and is now available for remote download. (Git is an open-source version control system that is available for download at <a href="http://www.git-scm.com" target="_blank">http://www.git-scm.com</a>. You must have Git installed on your system to proceed.) </p>
+<p align="justify"> Like most GAMAP users, you probably have been storing the <tt>gamap2/</tt> directory in a subdirectory of your <tt>~/IDL/</tt> directory. So let's rename the existing GAMAP directory: </p>
+<blockquote>
+  <pre class="courier16">cd ~/IDL
+mv gamap2 gamap2.backup</pre>
+</blockquote>
+<p>This will allow us to revert to the old code in case there is a problem w/ the Git download.</p>
+<p>Once the existing directory has been backed up, you can then proceed to download the GAMAP source code from the Git online repository.</p>
+<p>To download athe GAMAP source code, type:</p>
+<blockquote><pre>git clone https://bitbucket.org/gcst/gamap2.git</pre></blockquote>
+<p>This will create a "clone" of the <tt>gamap2/</tt> directory, which will be populated with the GAMAP source code subdirectories. The various system files are all stored in the <tt>gamap2/.git</tt> subdirectory. The files in <tt>gamap2/</tt> are an exact copy of what was on the Git repository server at the time you downloaded it. </p>
+<p>If you wish to use a different directory name for your local "cloned" repository, you may type it as the second argument to <strong>git clone </strong>, e.g: </p>
+<blockquote><pre>git clone https://bitbucket.org/gcst/gamap2.git new_gamap2</pre></blockquote>
+
+<P align="justify">Here is a list of the subdirectories in the <tt>gamap2/</tt> directory structure:</p>
+<table width="95%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" align="center">
+  <tr bgcolor="#CCCCCC">
+    <th scope="col">Directory</th>
+    <th scope="col">Description of directory contents </th>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">atm_sci/</p></td>
+    <td valign="top"><p align="justify">Contains routines that perform atmospheric chemistry computations.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">benchmark/</p></td>
+    <td valign="top">Contains routines for creating standard comparison plots for GEOS-Chem 1-month benchmarks</td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">color/</p></td>
+    <td valign="top"><p align="justify">Contains routines that define the color table and color bar.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">data_files/</p></td>
+    <td valign="top"><p align="justify">Contains various data files (e.g. surface pressures, etc.) required by GAMAP. </p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">date_time/</p></td>
+    <td valign="top"><p align="justify">Contains routines that compute and/or format the date and time.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">doc/</p></td>
+    <td valign="top"><p align="justify">Contains routines for documenting IDL source code.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">examples/</p></td>
+    <td valign="top"><p align="justify">Contains routines that educate users about the various features of GAMAP.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">file_io/</p></td>
+    <td valign="top"><p align="justify">Contains routines that read data from / write data to disk.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">gamap_util/</p></td>
+    <td valign="top"><p align="justify">GAMAP routines for displaying, reading, and plotting data. (These routines comprise most of the routines that used to be in the old <tt>~/IDL/gamap</tt> directory of previous versions.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">general/</p></td>
+    <td valign="top"><p align="justify">Miscellaneous IDL routines that do not fall into any of the other categories.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">graphics/</p></td>
+    <td valign="top"><p align="justify">Routines for reading from / writing to various graphic data file formats such as GIF, JPEG, BMP, PNG, TIFF, etc. </p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">idl_startup/</p></td>
+    <td valign="top"><p align="justify">Contains the default <tt>idl_startup.pro</tt> for use with GAMAP (see <a href="#2.3">Chapter 2.3</a>)</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">input_files/</p></td>
+    <td valign="top"><p align="justify">Contains the <tt>gamap.defaults</tt>, <tt>diaginfo.dat</tt>, and <tt>tracerinfo.dat</tt> files for use with GAMAP. (See <a href="Chapter_7.html">Chapter 7</a>.)</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">internals/</p></td>
+    <td valign="top"><p align="justify">Internal GAMAP routines (i.e. not meant to be called by GAMAP users directly). </p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">manual/</p></td>
+    <td valign="top"><p align="justify">Contains the GAMAP manual pages (a collection of the documentation from each of the GAMAP source code routine headers) in HTML and/or PDF format. The same documentation is also displayed in <a href="Chapter_5.html">Chapter 5</a>.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">math_units/</p></td>
+    <td valign="top"><p align="justify">Contains routines for math, statistics, and unit conversion.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">plotting/</p></td>
+    <td valign="top"><p align="justify">Contains general plotting routines.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">regridding/</p></td>
+    <td valign="top"><p align="justify">Contains routines for regridding data from one model grid to another. </p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">strings/</p></td>
+    <td valign="top"><p align="justify">Contains routines for working with strings.</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p class="courier16">structures/</p></td>
+    <td valign="top"><p align="justify">Contains routines for working with structures. </p></td>
+  </tr>
+  <tr>
+    <td valign="top" class="courier16">timeseries/</td>
+    <td valign="top">Contains routines for working with <a href="Chapter_6.html#6.9">4D time series data</a> (e.g. lon, lat, alt, time output) </td>
+  </tr>
+</table>
+<P align="justify">For a complete list of all GAMAP routines, as well as the relevant documentation, please see <a href="Chapter_5.html">Chapter 5</a>. </p>
+<P align="justify"><span class="size16bi"><a name="2.2.1"></a>2.2.1 A little more  information</span></p>
+<P align="justify"> Some programs were included from other authors, including David Fanning's <a href="by_alphabet/gamap_t.html#TVIMAGE" target="_blank">TVIMAGE</a>, <a href="by_alphabet/gamap_t.html#TVREAD" target="_blank">TVREAD</a>, and <a href="by_alphabet/gamap_u.html#UNDEFINE" target="_blank">UNDEFINE</a> routines, as well as Martin Schultz's <a href="by_alphabet/gamap_n.html#NCDF_READ" target="_blank">NCDF_READ</a> routine. Also, some of the color table definitions were taken from the ColorBrewer package.</p>
+<P align="justify"> Windows users should check their &quot;Preferences&quot; to make sure <tt>gamap2/</tt> and its subdirectories are found. If you are already running an IDL session, exit and start again. You should now be able to use GAMAP.</p>
+<p>Please visit the <a href="http://wiki.geos-chem.org/GEOS-Chem_programming_resources" target="_blank">GEOS&ndash;Chem Programming Resources Web Page</a>. There you will find several useful links to IDL-related sites.</p>
+<p align="justify"> Furthermore, there is a really good book on IDL available (&quot;IDL Programming Techniques&quot; by <A HREF="http://www.dfanning.com/" TARGET="_new">David Fanning</A>. Finally, let us recommend the <A HREF="news://comp.lang.idl-pvwave" TARGET="_new">comp.lang.idl-pvwave</A> newsgroup if you really want to learn about IDL.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="2.3"></a>2.3 The idl_startup.pro file</p> 
+<p align="justify">Now that we have installed the GAMAP directory structure into our<span class="courier16"> ~/IDL </span>directory, let us  take a further look at the <span class="courier16"> idl_startup.pro </span>file. This file is executed whenever an IDL session is started. It defines various quantities (such as the default colortable) which will be used in the IDL session.</p>
+<p align="justify">A default <tt>idl_startup.pro</tt> file is contained in the <tt>gamap2/idl_startup</tt> directory. It is recommended to copy this file to your <tt>~/IDL</tt> directory. Also make sure that your<span class="courier16"> .cshrc </span>file contains the defintion of the <tt>IDL_STARTUP</tt> environment variable as described above in <a href="#2.1">Chapter 2.1</a>).</p>
+<p align="justify">The <tt>idl_startup.pro</tt> file looks like this:</p>
+<blockquote>
+  <pre class="courier16">;==============================================================================
+; Startup file for IDL -- customized for GAMAP 2.18+ (bmy, 4/30/15)
+;
+; This file is an batch file (i.e. it is a list of IDL statements as
+; you would type them from the IDL> command prompt).  There are no
+; "pro" and "end" statements, as there would be with regular IDL
+; routines.  Also, compound IF statements are not allowed.
+;==============================================================================
+
+;-----------------------------------------------------------------------------
+; The !PATH variable contains various system directories in which you would
+; like IDL to search for source code routines.  We must insert the gamap2/
+; directories up front so that IDL will search here before searching through
+; the system directories.
+;
+; You may also add other directories in which you have IDL source code to
+; the !PATH variable.  
+;------------------------------------------------------------------------------
+
+; Call the IDL routine PATH_SEP to get the path separator token 
+; (i.e. the character that you need to separate directories in !PATH). 
+; This token is different depending on which OS you are using.
+Sep     = Path_Sep( /Search_Path )
+
+; Add directories to the !PATH variable.  Using IDL's EXPAND_PATH routine
+; with the '+' sign will also cause any subdirectories to be added to the
+; the !PATH variable.  
+;
+; The /ALL_DIRS flag will cause all subdirectories to be added to !PATH
+; and not just the subdirectories containing *.pro files. 
+
+; %%%%%%%%%% IDL 6.2 and later %%%%%%%%%%
+
+; Use the PREF_SET command to append your directories into the default
+; IDL search path.  This approach is necessary if you want to use the 
+; IDLDE in IDL 7.0 and later versions. (phs, bmy, 4/15/08)
+if ( !VERSION.RELEASE ge 6.2 ) then                               $
+   Pref_Set, 'IDL_PATH',                                          $
+             Expand_Path( '+~/IDL/gamap2/',   /All_Dirs ) + Sep + $
+             '<IDL_DEFAULT>', /Commit
+
+;-----------------------------------------------------------------------------
+; Various default settings
+;-----------------------------------------------------------------------------
+
+; Default character size, character thickness, and line thickness
+!P.CHARSIZE  = 1.2
+!P.CHARTHICK = 1
+!P.THICK     = 1
+
+; Default X and Y margins for the PLOT command
+!X.MARGIN    = [10,3]
+!Y.MARGIN    = [ 4,2]
+
+; !EDIT_INPUT is the # of lines that you can up-arrow recall,
+; but this is only defined in IDL versions prior to 6.2. (bmy, 3/21/06)
+if ( !VERSION.RELEASE lt 6.2  ) then !EDIT_INPUT = 40
+
+; Suppress status & warning messages for remote shell operation
+if ( !D.NAME eq 'NULL'        ) then !QUIET = 1
+
+;-----------------------------------------------------------------------------
+; Default device and color settings
+;
+; These commands will not be executed you if are running IDL on a NULL device
+; (e.g. a terminal such as VT100 that can display text but not graphics). 
+;-----------------------------------------------------------------------------
+
+; Get visual color depth 
+if ( !D.NAME ne 'NULL'        ) then Device, Get_Visual_Depth=Depth
+if ( N_Elements( Depth ) eq 0 ) then Depth = 0
+if ( Depth lt 4               ) then RetAll   
+
+;-------
+; This section comes from a newsgroup post by Liam Gumley, Wed, 13 Aug 1998.  
+; This will set the colors correctly on 8-bit, 24-bit, and TRUE COLOR devices.
+;
+; Use (normally 8) bit colors
+if ( !D.NAME ne 'NULL'  and $
+     !VERSION.OS_FAMILY eq 'unix' ) then Device, Pseudo=Depth
+
+; Tell IDL to do the backing store instead of the window manager
+; Also use pseudo colors instead of true color
+if ( !D.NAME ne 'NULL' ) then Device, Retain=2, Decomposed=0
+
+; Open a pixmap window to get color table and allocate space for all
+; available colors but 15, so 15 colors are left for other apps
+if ( !D.NAME ne 'NULL' ) then Window, /Free, /Pixmap, Colors=-15
+;-------
+
+; Manually set the default character size and spacing
+; This is necessary for SGI, since the SGI default fonts are huge!
+if ( !D.NAME ne 'NULL' ) then Device, Set_Character_Size=[ 6, 9 ]
+
+; Load the WHITE-GREEN-YELLOW-RED custom colortable with MYCT
+if ( !D.NAME ne 'NULL' ) then MyCt, /Verbose, /WhGrYlRd
+
+; Test if !MYCT was created before we reference it below
+DefSysV, '!MYCT', Exists=MYCT_Exists
+
+; If we have loaded a MYCT color table, then the default background
+; color will be white.  Also set the default foreground color to black.
+if ( !D.NAME ne 'NULL' and MYCT_Exists ) then !P.COLOR = !MYCT.BLACK
+
+; Delete pixmap window so that plotting will create visible one
+if ( !D.NAME ne 'NULL' ) then WDelete
+
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+;%%% Kludge by Bob Yantosca (bmy, 1/4/11)
+;%%%
+;%%% For Windows 7 displays, open a window of size 1000x700 pixels, at
+;%%% top left corner of the screen.  Otherwise the IDL window will be 
+;%%% placed so that you can't put a mouse pointer on it.
+;%%%
+;%%% Comment this out if it doesn't work for your display.  This
+;%%% is customized to Bob Y's window display, which is 1980x1200.
+;%%%
+;if ( !D.NAME ne 'NULL' ) then Window, XSize=1000, YSize=700, XPos=0, YPos=500
+;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</pre>
+ </blockquote>
+ <p align="justify">lines that you see in the file. </p>
+ <p align="justify">The <tt>idl_startup.pro</tt> file is essentially doing 4 things:</p>
+ <ol>
+   <li>Defining the paths in which you have stored IDL source code routines on your system</li>
+   <li>Setting some global plot parameters</li>
+   <li>Setting the default graphics device (X-terminal) </li>
+   <li>Setting the color table  </li>
+ </ol>
+ <p align="justify">For the purposes of our discussion, the most important items in the above list are #1 and #4. We will discuss how to define paths in the next section. We will discuss color tables in Chapter 3.</p>
+ <p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="2.4"></a><span class="size20bi">2.4 
+  Defining the default IDL paths</span></p>
+<P align="justify">Let us take a closer look at the <tt>!PATH</tt> variable from the <tt>idl_startup.pro</tt> file.  <tt>!PATH</tt> is a system variable (i.e. an IDL variable that is visible to all routines at all times) and it contains all of the directories in which you would like IDL to search for source code routines.</p>
+<P align="justify">When we start IDL, the IDL executable directories and other system directories are automatically added to the <tt>!PATH</tt> variable. If <tt>!PATH</tt> is not modified, then IDL would only search through the system directories for source code routines.</p>
+<P align="justify">In order to ensure that IDL searches for GAMAP routines before it looks for system routines, we must modify the <tt>!PATH</tt> variable such that we place the GAMAP source code directories first.</p>
+<blockquote>
+  <pre class="courier16">; Call the IDL routine PATH_SEP to get the path separator token 
+; (i.e. the character that you need to separate directories in !PATH). 
+; This token is different depending on which OS you are using.
+Sep     = Path_Sep( /Search_Path )</pre>
+</blockquote>
+<p align="justify">This first statement defines the path separator token. This is the character that separates directories from each other in the <tt>!PATH</tt> variable string. For Unix, the path separator character is the colon; however, this may be a different character for other operating systems. IDL's PATH_SEP function will return the correct path separator token in a operating-system-independent way. </p>
+<p align="justify">The next statements add directories to the IDL <tt>!PATH</tt> variable.  Note that you have to do this in 2 ways, depending on your IDL version. The first method is for IDL versions 6.1 and earlier: </p>
+<blockquote>
+  <pre class="courier16">
+; Add directories to the !PATH variable.  Using IDL's EXPAND_PATH routine
+; with the '+' sign will also cause any subdirectories to be added to the
+; the !PATH variable.  
+;
+; The /ALL_DIRS flag will cause all subdirectories to be added to !PATH
+; and not just the subdirectories containing *.pro files.  
+  
+; %%%%%%%%%% IDL 6.1 and earlier %%%%%%%%%%
+    
+; Get the IDL system path and all subdirctories
+if ( !VERSION.RELEASE lt 6.2 ) then $
+   IdlPath = Expand_Path( '+' + !PATH,  /All_Dirs ) 
+    
+; Append your directories into the IDL !PATH variable
+if ( !VERSION.RELEASE lt 6.2 ) then $
+    !PATH   = Expand_Path( '+~/IDL/gamap2/', /All_Dirs ) + Sep + IdlPath</pre>
+</blockquote>
+<p align="justify">In addition to adding the top-level <tt>gamap2/</tt> directory to the <tt>!PATH</tt>,  we also need to include all subdirectories of <tt>gamap2/</tt>to <tt>!PATH</tt> as well. This is most easily done with IDL's <tt>EXPAND_PATH</tt> routine. By adding a<span class="courier16"> + </span>sign in front of the directory name in the call to <tt>EXPAND_PATH</tt>, we tell IDL to also include all subdirectories of gamap2/ into the<span class="courier16"> !PATH </span>variable. We also need to use the <tt>/ALL_DIRS</tt> keyword to <tt>EXPAND_PATH</tt> in order to ensure that all subdirectories (and not just those with *.pro) files will be added to the <tt>!PATH</tt> variable.</p>
+<p align="justify">You may also add more directories of your own as well to <tt>!PATH</tt> as well. These should come after the <span class="courier16"> gamap2/ </span>directory</p>
+<p align="justify">For IDL versions 6.2 and later we use a different method: </p>
+<blockquote>
+  <pre class="courier16">; %%%%%%%%%% IDL 6.2 and later %%%%%%%%%%
+    
+; Use the PREF_SET command to append your directories into the default
+; IDL search path.  This approach is necessary if you want to use the 
+; IDLDE in IDL 7.0 and later versions. (phs, bmy, 4/15/08)
+if ( !VERSION.RELEASE ge 6.2 ) then                             $
+   Pref_Set, 'IDL_PATH',                                        $
+             Expand_Path( '+~/IDL/gamap2/', /All_Dirs ) + Sep + $
+             '&lt;IDL_DEFAULT&gt;', /Commit
+</pre>
+</blockquote>
+<P align="justify">This is essentially doing the same thing as above, but instead of directly setting the <tt>!PATH</tt> statement, we are using the <tt>PREF_SET</tt> command to specify it. </p>
+<P align="justify">This method is also required if you want to use the new the new IDL Workbench in IDL 7 and IDL 8. For more information, please see the <a href="http://wiki.geos-chem.org/GAMAP_tips_and_tricks#GAMAP_and_IDL_7" target="_blank">entry in the GEOS&ndash;Chem wiki page for GAMAP and IDL 7.</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p align="center" class="size14bi"><A HREF="Chapter_1.html">Previous</A> | <A HREF="Chapter_3.html">Next</A> | <a href="Chapter_2.html" target="_blank">Printable View (no frames)</a></p> 
+</body>
+</html>

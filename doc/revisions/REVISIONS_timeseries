@@ -1,0 +1,61 @@
+Modification history for all files in /home/bmy/IDL/gamap2/timeseries/
+last updated : 12/15/2016 13:51
+
+===================
+GC_COMBINE_ND48.PRO
+===================
+      phs, 31 Jul 2007: GAMAP VERSION 2.10
+                        - Initial version
+      phs, 11 Oct 2007: - few bugs fix
+                        - added output keywords
+      phs, 15 Oct 2007: - added LOCALTIME keyword
+      phs, 18 Oct 2007: - do not save if output file is one of the
+                          input file.
+      phs, 26 Oct 2007: - TIME can be use to select the time span
+                          of the series.
+                          Added DAVG keyword.
+      phs, 30 Oct 2007: - couple of minor fixes.
+      phs, 11 Aug 2009: - major fix: bug fix when same tracer 
+                          in several stations 
+      bmy, 12 Mar 2009: GAMAP VERSION 2.14
+                        - Typo at line 429 fixed
+
+===================
+GC_COMBINE_ND49.PRO
+===================
+      phs,  6 Jun 2007: GAMAP VERSION 2.05
+                        - Initial version
+      phs, 25 Jul 2007: GAMAP VERSION 2.10
+                        - added Moving Average and Daily Max as
+                          signal processing available before 
+                          saving/passing data.
+                        - added Lon and Lat keywords to select one
+                          location or a smaller area.
+                        - added output keywords.
+      phs,  4 Oct 2007: - Bug fix for OUTTIME keyword
+      phs, 12 Oct 2007: - Added OUTLEV output keyword, and LEV
+                          input keyword.
+                        - INDIR can be used as output keyword.
+      phs, 15 Oct 2007: - added LOCALTIME keyword
+      phs, 18 Oct 2007: - do not save if output file is one of the
+                          input file.
+      phs, 26 Oct 2007: - bug fix for LON and LAT
+                        - added TIME keyword to limit
+                          timeseries in time.
+      phs, 28 Oct 2007: - DMAX accounts for LOCALTIME if set.
+                        - Bug fix for OutTime when /DMax.
+      phs, 04 Apr 2008: GAMAP VERSION 2.12
+                        - added DAVG keyword
+                        - now cleanup the /no_global pointers
+                        - added the FILELIST keyword
+      phs, 17 Jul 2008: - Added comments
+      phs, 15 Aug 2008: GAMAP VERSION 2.13
+                        - Bug fix for OutTime when /DMax or /DMean
+                          and input are from at least two different
+                          months
+ mb & phs, 02 Dec 2008: - DIM is forced to 32-bit integer (LONG)
+      phs, 08 Jan 2009: - Now can process files that cover time
+                          periods different from one day. 
+      bmy, 14 Apr 2010: GAMAP VERSION 2.14
+                        - Add _EXTRA=e to CTM_GET_DATA so as to pass
+                          down any flags for nested grids 

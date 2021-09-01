@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<!-- GEOS-Chem style sheet -->
+<link rel="stylesheet" href="../gamap.css" type="text/css">
+<TITLE>GAMAP Online User's Guide</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="FF0000" HLINK="#FFFF00">
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_6.html">Previous</A> | <A HREF="Chapter_8.html">Next</A> | <a href="Chapter_7.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size24bi"><a name="7"></a>7. GAMAP input files</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="7.1"></a>7.1 The gamap.defaults file</p>
+<p align="justify"> The <tt>gamap.defaults</tt> file contains the following user-definable default settings which are read the 
+  first time GAMAP is called, and then once thereafter each time the routine <a href="by_alphabet/gamap_c.html#CTM_CLEANUP" target="_blank">CTM_CLEANUP</a>  is called.</p>
+<p align="justify"> The <tt>gamap.defaults</tt> file that ships with GAMAP v2&ndash;19 is available by clicking <a href="files/gamap.defaults" target="_blank">HERE</a> 
+  (file will open in a new browser window).</p> 
+<p align="left"> The switches 
+  that can be set in <tt>gamap.defaults</tt> are as follows:</p>
+<table width="95%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="4" align="center">
+  <tr valign="top" bgcolor="#CCCCCC">
+    <th scope="col">Setting</th>
+    <th scope="col">Description</th>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">MODELNAME:</span> </td>
+    <td><p>String containing the default model name, grid resolution, and number of layers.&nbsp;GAMAP will use MODELNAME as the default model type when prompting the user to select a model.&nbsp; Valid entries for MODELNAME are &quot;GISS_II_PRIME 4x5 (23L)&quot;, &quot;GEOS1 2x2.5 (20L)&quot;, etc. Any number of spaces are allowed between the individual words.</p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">FILEMASK:</span> </td>
+    <td><p>Default filemask for input files.&nbsp; GAMAP will use FILEMASK when prompting the user to select a file via the dialog box.&nbsp; In order to tell GAMAP to read/write files to/from the current directory, you can set filemask to &quot;./&quot;. </p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">DO_POSTSCRIPT:</span> </td>
+    <td><p>Flag for determining whether or not to create PostScript output.&nbsp; Valid entries for DO_POSTSCRIPT are 0 (never create PostScript output), 1 (always create PostScript output) or *QUERY (ask the user each time whether or not to create PostScript output)&nbsp;. Recommended value: *QUERY. </p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">PS_FILENAME:</span></td>
+    <td><p>Default PostScript file name where output will be sent.&nbsp; Valid entries for PS_FILENAME are a file path (such as ~/IDL/myfile.ps) or *QUERY (which will prompt the user to supply a file name each time).&nbsp; If *QUERY is selected, then PS_FILENAME will have a default value of &quot;idl.ps&quot;, which the user can change if so desired.</p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">TIMESTAMP:</span></td>
+    <td><p>Flag for determining whether or not to place a timestamp on the PostScript output. Valid entries for TIMESTAMP are 0 (never), 1 (always), or *QUERY (ask the user each time).&nbsp; Recommended value: 0. </p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">DO_GIF:</span></td>
+    <td><p align="justify">Flag for determining whether or not to save output to GIF files.&nbsp; Valid entries for DO_GIF are 0 (never), 1 (always), or *QUERY (ask the user each time).&nbsp; Recommended value: *QUERY </p>
+    <p align="justify">NOTE: the switches DO_JPEG, DO_BMP, DO_PNG, DO_PICT, DO_TIFF work in exactly the same way as DO_GIF.</p></td>
+  </tr>
+  <tr valign="top">
+    <td><span class="size16bi">GIF_FILENAME:</span></td>
+    <td><p align="justify">Default GIF file name where output will be sent.&nbsp; Valid entries for GIF_FILENAME are a file path (such as ~/IDL/mygif.gif) or *QUERY (which will prompt the user to supply a file name each time).&nbsp; If *QUERY is selected, then GIF_FILENAME will have a default value of frame%NNN%, which the user can change if so desired.&nbsp; The token %NNN% will be replaced with a counting index, such as 001, 002, etc.&nbsp; Recommended value: *QUERY.</p>
+      <p align="justify">NOTE: the switches JPEG_FILENAME, BMP_FILENAME, PNG_FILENAME, PICT_FILENAME, and TIFF_FILENAME work in the same way as GIF_FILENAME.</p>
+    <p align="justify">ALSO NOTE: GIF file format support was removed in IDL version 5.4, but since has been restored in IDL versions 6.2 and higher. If you are using an older version of IDL we suggest that you upgrade to the most recent version so that you can take advantage of GIF file support.</p></td>
+  </tr>
+</table>
+<br>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="7.2"></a>7.2 The diaginfo.dat file</p>
+<div style="color: #aa0000; background: #eeeeee;border: 3px solid red; padding: 1em; margin: auto; width: 90%; ">
+<p class="size14bi">NOTE: Please see the <a href="http://wiki.seas.harvard.edu/geos-chem/index.php/GAMAP_tips_and_tricks#Usage_of_TRACERINFO.DAT_and_DIAGINFO.DAT" target="_blank">&quot;GAMAP Tips and Tricks&quot; page on the GEOS&ndash;Chem wiki</a> for more tips about the diaginfo.dat file!</p>
+</div>
+<p align="justify"> This file 
+  is where you list each different diagnostic category name and corresponding 
+  tracer offset.&nbsp; GAMAP assigns each diagnostic a different offset, which 
+  is specified in the line:</p> 
+<blockquote>
+  <p class="courier16">##### SPACING BETWEEN DIAGNOSTIC 
+    CATEGORY OFFSETS = 1000</p>
+</blockquote>
+<p align="justify">These offsets 
+  are the same offsets listed in the <tt>tracerinfo.dat</tt> file (see <a href="#7.3">Chapter 7.3</a>).
+<p align="justify">Historically, 
+  GAMAP has used a diagnostic offset of 1000, which means that each diagnostic 
+  category could have a maximum of 1000 possible tracers. However, some diagnostic 
+  categories need to have more than 1000 tracers, either for &quot;special chemistry&quot; 
+  tracers or for quantities such as GMAO meteorological data fields. GAMAP v2&ndash;13 
+  now allows you to specify the diagnostic offset within <tt>diaginfo.dat</tt>. For compatibility with older versions of GAMAP and GEOS&ndash;Chem, this offset 
+  is currently set to 1000. This offset value may be increased in a future version 
+  of GAMAP.</p> 
+<p align="justify"> The <tt>diaginfo.dat</tt>  file that ships with GAMAP v2&ndash;19 is available by clicking <a href="files/diaginfo.dat" target="_blank">HERE</a> 
+  (file will open in a new browser window). The # characters denote the start 
+  of comment lines, which will be ignored.&nbsp; If you have questions about how 
+  to modify this file, please contact Bob Yantosca (email: bmy at io dot harvard 
+  dot edu).</p> 
+<p align="justify">NOTE: 
+  you may not need to use the default <tt>diaginfo.dat</tt>file at all. GEOS&ndash;Chem can now create <tt>diaginfo.dat</tt> and <tt>tracerinfo.dat</tt> files that are customized to a given model simulation. If you keep these 
+  files in the same directory where the output files from the GEOS&ndash;Chem simulation 
+  are located and start GAMAP in that directory, then GAMAP will &quot;customize&quot; 
+  itself to the particular output files being read in.</p> 
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><A NAME="7.3"></a>7.3 The tracerinfo.dat files</p>  
+<div style="color: #aa0000; background: #eeeeee;border: 3px solid red; padding: 1em; margin: auto; width: 90%; ">
+<p align="justify" class="size14bi">NOTE: Please see the <a href="http://wiki.seas.harvard.edu/geos-chem/index.php/GAMAP_tips_and_tricks#Usage_of_TRACERINFO.DAT_and_DIAGINFO.DAT" target="_blank">&quot;GAMAP Tips and Tricks&quot; page on the GEOS&ndash;Chem wiki</a> for more tips about the diaginfo.dat file!</p>
+</div>
+<p align="justify">This file 
+  is where you list each of the tracers that correspond to a given diagnostic 
+  category. You can also list the molecular weight, carbon number, default unit 
+  (and scale factor to multiply the original data by to convert to the default 
+  unit) for each tracer.</p>
+<p align="justify"> Click <a href="files/tracerinfo.dat" target="_blank">HERE</a> to view the default <tt>tracerinfo.dat</tt> file that ships with GAMAP v2&ndash;19.</p>
+<p align="justify">NOTE: You may not need to use the default <tt>tracerinfo.dat</tt> file at allse files at all. GEOS&ndash;Chem can now create customized versions of <tt>diaginfo.dat</tt> and <tt>tracerinfo.dat</tt> for each specific simulation type. However, if you want to read data that is not from a GEOS&ndash;Chem simulation, then you will have to modify the <tt>diaginfo.dat</tt> and <tt>tracerinfo.dat</tt> files to account for the data that you are trying to read.</p>
+<p align="justify">Also, in the <tt>tracerinfo.dat</tt> files, # characters 
+  denote the start of comment lines, which will be ignored. You can modify 
+  the tracerinfo.dat files to suit 
+  your own purposes. If you have questions about how to modify these files, please 
+  contact the GEOS-Chem Support Team (email: geos-chem-support<img src="img/at_sign.gif" width="10" height="13">g.harvard.edu).</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="center" class="size14bi"><A HREF="Chapter_6.html">Previous</A> | <A HREF="Chapter_8.html">Next</A> | <a href="Chapter_7.html" target="_blank">Printable View (no frames)</a></p> 
+</body>
+</html>

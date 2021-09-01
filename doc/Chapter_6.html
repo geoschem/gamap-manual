@@ -1,0 +1,998 @@
+<html>
+<head>
+<!-- GEOS-Chem style sheet -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+<title>GAMAP Online User's Guide</title>
+</head>
+
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="FF0000" HLINK="#FFFF00">
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_5.html">Previous</A> | <A HREF="Chapter_7.html">Next</A> | <a href="Chapter_6.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size24bi"><a name="5"></a>6. GAMAP data formats and data structures</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="6.1"></a>6.1 ASCII &quot;punch&quot; file format</p>
+<div style="color: #aa0000; background: #eeeeee;border: 3px solid red; padding: 1em; margin: auto; width: 90%; ">
+  <p class="size14bi">The ASCII punch file format is being phased out in favor of netCDF file formats. Some versions of the GISS-CTM may still use this format. We shall leave this section here for reference.</p>
+</div>
+<p align="justify">This is the 
+  original data format developed by M. Prather (now at UC Irvine) for the old 
+  9-layer Harvard CTM driven by GISS&ndash;II meteorology.&nbsp; This file format 
+is still used by some older versions of the GISS 9 and 23 layer models. This output file is format has largely been supplanted by both the <a href="#6.2">binary punch format</a> and the netCDF format.</p> 
+<p align="justify">The chief 
+  advantage of the ASCII "punch" files is that they can be read easily by Fortran, 
+  IDL, or S-Plus code running on either big-endian or little-endian machines.
+  Their main disadvantatage is that they only allow for 2 decimal places of precision, 
+  which leads to truncation errors in the diagnostic output.</p> 
+<p align="justify"> Here is 
+  what the top of an ASCII punch file looks like. The first line is the top-of-file 
+  header. The next lines is the header for the first level of the first data block, 
+  followed by sample data lines in<span class="courier16"> '(12f6.2)' </span>format.</p>
+<blockquote>
+  <pre class="courier16">GLOBAL-RUN--4X5+SOM-PFILT--CTM version 1.0 (3/93 Prather)    24 72 46 20  0  0  1985
+  IJ-AVG-1  276    2     75960     76680 1.000E-10    72  46   0 
+
+288.86288.86288.90288.90288.92288.96288.96288.98288.99289.00289.01289.01 
+289.01289.02289.01289.00289.01289.02289.00289.01289.02289.02289.03289.04</pRE>
+</blockquote>
+
+<p>Note that in the ASCII punch 
+  file, each level is stored as a 2-D data block. Therefore, the data for the 
+  second level will have the category IJ-AVG-2, 
+  etc.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="6.2"></a> 6.2 Binary output ("punch") file format (version 2.0)</p>
+<div style="color: #aa0000; background: #eeeeee;border: 3px solid red; padding: 1em; margin: auto; width: 90%; ">
+  <p class="size14bi">Please see the <a href="http://wiki.geos-chem.org/File_I/O_with_GAMAP" target="_blank">&quot;File I/O with GAMAP&quot; page on the GEOS&ndash;Chem wiki</a> for more tips about handling binary punch files!</p>
+  <p class="size14bi"> We are starting to phase out the binary punch format v2.0 in favor of <a href="#6.3">netCDF COARDS format</a>. netCDF file I/O capability has been introduced into GEOS&ndash;Chem starting with <a href="http://wiki.geos-chem.org/GEOS-Chem_v9-01-03" target="_blank">version v9&ndash;01&ndash;03</a>. This transition will occur gradually.</p>
+</div>
+<p align="justify">The binary "punch" file format (v. 2.0) is now the standard data format used by <A HREF="http://www.geos-chem.org" TARGET="_Parent">the 
+  GEOS-Chem model</A>.&nbsp; This format was designed to facilitate smooth interaction 
+  with GAMAP.&nbsp; A binary punch file also loads much faster and typically only 
+  requires 2/3 as much disk space as the equivalent ASCII punch file.&nbsp; This 
+  section describes the binary punch file format version 2.0. </p>
+<p class="size16bi"><a name="6.2.1"></a>6.2.1 General header for binary output files</p>
+<table border="1" bordercolor="#000000" cellpadding=5 cellspacing=0 width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"><I>Field</I></th>
+    <th width="21%" valign="top">Type</th>
+    <th valign="top">Description</th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ftype</I></td>
+    <td valign="top">CHARACTER*40</td>
+    <td valign="top">The file identifier string (<span class="courier16">CTM 
+        bin 02 </span>or<span class="courier16"> CTM bin 4D</span>) 
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>toptitle</I></td>
+    <td valign="top">CHARACTER*80</td>
+    <td valign="top">A title line, similar to the ASCII punch file format. </td>
+  </tr>
+</table>
+<p class="size16bi"><a name="6.2.2"></a>6.2.2 Datablock header for binary output files</p>
+<p>First line of datablock header:</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Field</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>modelname</I></td>
+    <td valign="top">CHARACTER*20</td>
+    <td valign="top">Name of the model (e.g. GEOS&ndash;3, GEOS4_30L) 
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>modelres</I></td>
+    <td valign="top">2 x REAL*4</td>
+    <td valign="top">Resolution of the model (lon, lat)
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>halfpolar</I></td>
+    <td valign="top">INTEGER*4</td>
+    <td valign="top">=1 if the 
+      model has half-sized boxes at the poles,<br>
+      =0 otherwise</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>center180</I></td>
+    <td valign="top">INTEGER*4</td>
+    <td valign="top">=1 if the 
+      model has the first longitude centered on 180&deg;,<br>
+        =0 otherwise</td>
+  </tr>
+</table>
+<p align="justify"> Second 
+  line of datablock header:</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Field</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>category</I></td>
+    <td valign="top">CHARACTER*40</td>
+    <td valign="top">Diagnostic category name (same as in ASCII punch file)</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tracer</I></td>
+    <td valign="top">INTEGER*4</td>
+    <td valign="top">Tracer number</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>unit</I></td>
+    <td valign="top">CHARACTER*40</td>
+    <td valign="top">Unit string (e.g 'molec/cm2/s', 'ppbv', etc.)
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tau0</I></td>
+    <td valign="top">REAL*8</td>
+    <td valign="top"> 
+      <p align="justify"> Starting TAU value (hours since 0 GMT 1/1/1985) for diagnostic 
+        interval 
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tau1</I></td>
+    <td valign="top">REAL*8</td>
+    <td valign="top">Ending TAU 
+      value (hours since 0 GMT 1/1/1985) for diagnostic interval</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>reserved</I></td>
+    <td valign="top">CHARACTER*40</td>
+    <td valign="top">Extra string for future use</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>dim</I></td>
+    <td valign="top">6 x INTEGER*4</td>
+    <td valign="top">Dimensions and starting box of data block:
+	   <BR>NI, NJ, NL, I0, J0, L0</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>skip</I></td>
+    <td valign="top">INTEGER*4</td>
+    <td valign="top">Length of data block in bytes</td>
+  </tr>
+</table>
+<p align="justify"> These two 
+  header lines are followed by the data block (REAL*4).</p>
+<p align="justify"> NOTE: While 
+  &quot;multilevel&quot; diagnostics are stored as individual layers in ASCII 
+  files, they are stored as 3D blocks in binary files.&nbsp; Category names are 
+  then e.g.<span class="courier16"> IJ-AVG-$ </span>instead of<span class="courier16"> IJ-AVG-1, IJ-AVG-2, </span>etc</p>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.3"></a>6.3 COARDS-compliant netCDF files</p>
+<p><span class="size16bi"><a name="6.3.1"></a>6.3.1 Overview</span></p>
+<p>GAMAP can read data from <a href="http://wiki.geos-chem.org/Preparing_data_files_for_use_with_HEMCO" target="_blank">COARDS-compliant netCDF file</a>s. This is a regular netCDF file which adheres to a standard set of dimension and attribute names. In particular:</p>
+<ol>
+  <li>
+    <p>Standard names for dimensions:</p>
+    <ul>
+      <li><strong>time</strong> (minutes, days, or years from a specified reference time)</li>
+      <li><strong>lev</strong> (# of levels in grid)</li>
+      <li><strong>lat</strong> (# of latitudes in grid)</li>
+      <li><strong>lon</strong> (# of longitudes in grid)</li>
+    </ul>
+  </li>
+  <li>
+    <p>Each index array has the same name as its dimension. Therefore,  the lon dimension is used to define the lon index array, etc.</p>
+  </li>
+  <li>
+    <p>Also index array values must be listed as monotonically increasing or decreasing.</p>
+  </li>
+  <li>
+    <p>Standard attribute names for each variable stored in the netCDF file. In particular, the most important of these are:</p>
+    <ul>
+      <li><strong>long_name</strong>: A longer description of the variable and what it represents.</li>
+      <li><strong>units</strong>: The units carried by the variable.</li>      
+    </ul>
+  <li>
+    <p>The time dimension should also have a calendar attribute, which may be:</p>
+    <ul>
+      <li><strong>gregorian</strong>: Describes a gregorian calendar with leap years (used by GEOS-Chem)</li>
+      <li><strong>noleap</strong>: Describes a 365 day calendar w/o leap years.</li>      
+    </ul>   
+  </li>
+</ol>
+<p>For more information about the COARDS standards, please see this web page.</p>
+<p><span class="size16bi"><a name="6.3.2"></a>6.3.2 Reading COARDS-compliant netCDF files from disk</span></p>
+<p>The main GAMAP program (as well as the lower-level routines like <a href="by_alphabet/gamap_c.html#CTM_GET_DATA" target="_blank">CTM_GET_DATA</a>, <a href="by_alphabet/gamap_c.html#CTM_GET_DATABLOCK" target="_blank">CTM_GET_DATABLOCK</a>) can read directly from COARDS-compliant netCDF files. The only limitation (at present) is that information about the tracer (i.e. category and tracer number) category and tracer name must be present in the <tt>diaginfo.dat</tt> and <tt>tracerinfo.dat</tt> files.</p>
+<p>You can also read any netCDF file directly with helper routine <a href="by_alphabet/gamap_n.html#NCDF_READ">NCDF_READ</a>.  This routine will return a structure containing all of the variables and attributes in the netCDF file.</p>
+<p><span class="size16bi"><a name="6.3.3"></a>6.3.3 Writing COARDS-compliant netCDF files from disk</span></p>
+<p>GAMAP routine <a href="by_alphabet/gamap_b.html#BPCH2COARDS">BPCH2COARDS</a> can convert a bpch file to a COARDS-compliant netCDF file. This may be used in conjunction with routine <a href="by_alphabet/gamap_m.html#MAKE_MULTI_NC">MAKE_MULTI_NC</a> to convert several bpch files in a single session.</p>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.4"></a>6.4 The FILEINFO structure</p>
+<p align="justify"> Contains 
+  information about a file that has been accessed in a GAMAP session. For each file read by GAMAP, a corresponding FILEINFO structure is stored in a global 
+common block. The global common block is accessible via the include statement <tt>@gamap_cmn.</tt></p>
+<p class="size16bi"><a name="6.4.1"></a>6.4.1 Structure tag names for FILEINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+    <p><I>Tag Name</I></p>    </th>
+    <th width="21%" valign="top"> 
+    
+    <p>Type</p>    </th>
+    <th valign="top"> 
+    
+    <p>Description</p>    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>filename</I></td>
+    <td valign="top">string</td>
+    <td valign="top">Name of the file containing data to be processed.</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ilun</I></td>
+    <td valign="top">long</td>
+    <td valign="top">Logical 
+      unit number. This field links the FILEINFO and DATAINFO structures.</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>filetype</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"> 000-099 
+      = ASCII files<br>
+      100-199 = binary files<br>
+      200-299 = netCDF files<br>
+      300-399 = HDF4 or HDF4&ndash;EOS files<br>
+      400-499 = HDF5 or HDF5&ndash;EOS files<br>
+      500-999 = reserved for future use</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>status</I></td>
+    <td valign="top">fix</td>
+    <td valign="top">Should be 1 if everything is correct, 0 indicates error (not thoroughly implemented though)</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>toptitle</I></td>
+    <td valign="top">string</td>
+    <td valign="top">Holds the title line from the model output file (ASCII or binary)</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>modelinfo</I></td>
+    <td valign="top">structure</td>
+    <td valign="top">Contains information about the model, so that grid can be computed (see below)</td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>gridinfo</I></td>
+    <td valign="top">pointer</td>
+    <td valign="top">Points to a structure that contains the horizontal and vertical grid (see below)</td>
+  </tr>
+</table>
+<p align="justify">GAMAP uses function 
+  CREATE3DFSTRU to create new FILEINFO structure(s).</p>
+<p align="justify">NOTE: 
+  The correspondence between IDL and FORTRAN data types is as follows </p> 
+<ul class="disc">
+  <li>IDL fix 
+    = Fortran INTEGER*2</li>
+  <li>IDL long 
+    = Fortran INTEGER*4</li>
+  <li>IDL float 
+    = Fortran REAL*4</li>
+  <li> IDL double 
+    = Fortran REAL*8</li>
+</ul>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.5"></a>6.5 The DATAINFO structure</p>
+<p align="justify"> Contains 
+  information about each data record that is in a model file. If a new file is 
+  opened, the complete header information is parsed once and the location of the 
+  individual data blocks is saved. Therefore, subsequent access is really fast.</p>
+<p class="size16bi"><a name="6.5.1"></a>6.5.1 Structure tag names for DATAINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ilun</I></td>
+    <td valign="top">long</td>
+    <td valign="top"><p align="justify">Logical unit number. This field links FILEINFO and DATAINFO structures.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>filepos</I></td>
+    <td valign="top">double long</td>
+    <td valign="top"><p align="justify">Saves position 
+      of associated data record in the file</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>category</I></td>
+    <td valign="top">string</td>
+    <td valign="top"><p align="justify">The diagnostics name (see data formats)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tracer</I></td>
+    <td valign="top">fix</td>
+    <td valign="top">      <p align="justify">A number 
+          identifying a tracer.&nbsp; This number corresponds to the CTM tracers but 
+          can be offset by multiples of a large number such as 100 or 1000; (information 
+    on all tracers is stored in tracerinfo.dat) </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tracername</I></td>
+    <td valign="top">string</td>
+    <td valign="top"> 
+       <p align="justify">The (full) name of the tracer as stored in tracerinfo.dat 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>tau0, tau1</I></td>
+    <td valign="top">2 x double</td>
+    <td valign="top"> <p align="justify">The tau 
+        values indicating the model time (e.g. hours since 0 GMT 1/1/1985).&nbsp; In general, GAMAP uses <I>tau0</I> rather than <I>tau1</I> to identify data 
+      records. </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>scale</I></td>
+    <td valign="top">float</td>
+    <td valign="top"> 
+        <p align="justify">A scale factor that is applied to the data.&nbsp; Upon 
+        reading, the data is scaled automatically (a) to accomodate the scale 
+        factor stored in the punch file header, (b) to convert the data to the 
+        default unit given in tracerinfo.dat. 
+        Therefore, <I>scale</I> will usually have a value of 1. 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>unit</I></td>
+    <td valign="top">string</td>
+    <td valign="top"> 
+        <p align="justify">The physical unit of the data (e.g. `ppbv').&nbsp; Units 
+    can be converted with CTM_CONVERT_UNIT.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>format</I></td>
+    <td valign="top">string</td>
+    <td valign="top"> 
+        <p align="justify">A format string describing the ASCII format of the data 
+    (e.g. `(12F6.2)').&nbsp; Takes the value `binary' for binary data files.&nbsp; If the data is free-format, leave this field empty. </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>status</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"> <p align="justify">0 indicates 
+        data not read, 1 indicates data read.&nbsp; This field is used in ctm_get_data.pro 
+        to specifically select (un)read data records.&nbsp; Convention: 2 indicates 
+      either loaded or unloaded data. </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>dim</I></td>
+    <td valign="top">4 x fix</td>
+    <td valign="top"> 
+        <p align="justify">Dimensions of the data array: dim[0]=NI, dim[1]=NJ, dim[2]=NL, 
+        dim[3]=ntimesteps.&nbsp; This is important to correctly assign a 2D field 
+        to LON-LAT or LON-ALT or LAT-ALT.&nbsp; If a dimension is not present, the respective field 
+    can be either 0 or 1. </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>first</I></td>
+    <td valign="top">3 x fix</td>
+    <td valign="top"> 
+        <p align="justify">First index stored in each dimension.&nbsp; NOTE: these 
+          values are FORTRAN indices starting with 1 instead of 0 (which is the 
+    IDL convention). </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>data</I></td>
+    <td valign="top">pointer</td>
+    <td valign="top"> 
+        <p align="justify">Points to a 1-D, 2-D, 3-D, or 4-D  float array.&nbsp; Access 
+          data as data = *( datainfo[index].data 
+    ) </p></td>
+  </tr>
+</table>
+<p align="justify"> Use function 
+  CREATE3DHSTRU  to 
+  create new DATAINFO structure(s).  
+<p align="justify">NOTE: 
+  The correspondence between IDL and FORTRAN data types is as follows 
+<ul class="disc">
+  <li>IDL fix 
+    = Fortran INTEGER*2</li>
+  <li>IDL long 
+    = Fortran INTEGER*4</li>
+  <li>IDL double long = Fortran INTEGER*8</li>
+  <li>IDL float 
+    = Fortran REAL*4</li>
+  <li> IDL double 
+    = Fortran REAL*8</li>
+</ul>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p class="size20bi"><a name="6.6"></a>6.6 The MODELINFO structure</p>
+<p align="justify"> This structure holds basic 
+  information about the model so that a grid can be computed.</p>
+<p class="size16bi"><a name="6.6.1"></a>6.6.1 General usage</p>
+<blockquote>
+  <pre class="courier16">ModelInfo = CTM_Type( <VAR>modelname</VAR> [, <VAR>options</VAR>] )</pre>
+</blockquote>
+<p class="size16bi"><a name="6.6.2"></a>6.6.2 Example</p>
+<blockquote>
+  <pre class="courier16">ModelInfo = CTM_Type( `GEOS_3', resolution=4 )</pre>
+</blockquote>
+<p class="size16bi"><a name="6.6.3"></a>6.6.3 Structure tag names for MODELINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>name</I></td>
+    <td valign="top">string</td>
+    <td valign="top"> 
+      <p> The name of the model 
+        (or name of the grid on which the data resides).&nbsp; Current options 
+        are</p>
+      <ul class="disc">
+        <li>GEOS_1 </li>
+        <li>GEOS_STRAT</li>
+        <li>GEOS_3</li>
+        <li>GEOS_4 </li>
+        <li>GEOS_5</li>
+        <li>MERRA</li>
+        <li>MERRA-2</li>
+        <li>GEOS_FP</li>
+        <li>GISS_II</li>
+        <li>GISS_II_PRIME (aka 
+          II_PRIME)</li>
+        <li>MATCH</li>
+        <li>FSU</li>
+        <li>GCAP</li>
+        <li>GENERIC</li>
+      </ul>
+      <p>Also note that the special names        </p>
+      <ul class="disc">
+        <li>GEOS3_30L</li>
+        <li>GEOS4_30L</li>
+        <li>GEOS5_47L</li>
+        <li>GEOSFP_47L</li>
+        <li>MERRA_47L</li>
+        <li>MERRA2_47L</li>
+    </ul>      <p>can also be used to denote reduced vertical-resolution grids.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>family</I></td>
+    <td valign="top">string</td>
+    <td valign="top"> 
+      <p align="justify">A model family: GEOS, GISS, FSU, generic 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>nlayers</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> 
+       <p align="justify">The maximum number of vertical layers</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ntrop</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> 
+        <p align="justify">The maximum number of layers in the troposphere (i.e. with chemistry) 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ptop, psurf</I></td>
+    <td valign="top">float</td>
+    <td valign="top"> 
+        <p align="justify">Pressure at model top and surface (used to convert sigma 
+        layers into pressure) 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>resolution</I></td>
+    <td valign="top">2 x float</td>
+    <td valign="top"><p align="justify">an array 
+      containing [ DI, DJ ]</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>halfpolar</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> 
+      <p align="justify">Flag that indicates whether polar boxes are half size or not</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>center180</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> 
+        <p align="justify">Flag that indicates whether grid boxes are centered (=1) 
+        or edged (=0) on 180 degrees 
+    </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>fullchem</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> <p align="justify">Flag that 
+        indicates whether full or reduced chemistry set was used (NOTE: This is 
+      now obsolete.)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>hybrid</I></td>
+    <td valign="top">long</td>
+    <td valign="top"> 
+        <p align="justify">Flag that indicates whether the model uses a hybrid sigma-pressure   
+        grid (=1) or a pure sigma level grid (=0) 
+    </p></td>
+  </tr>
+</table>
+<p align="justify"> Most parameters 
+  are automatically set to the correct values in function CTM_TYPE, 
+  so you only need to provide the model name and resolution.</p> 
+<p align="justify">NOTE: 
+  The correspondence between IDL and FORTRAN data types is as follows </p>
+
+<ul class="disc">
+  <li>IDL fix 
+    = Fortran INTEGER*2</li>
+  <li>IDL long 
+    = Fortran INTEGER*4</li>
+  <li>IDL float 
+    = Fortran REAL*4</li>
+  <li> IDL double 
+    = Fortran REAL*8</li>
+</ul>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.7"></a>6.7 The GRIDINFO structure</p>
+<p align="justify"> This structure 
+  holds the actual grid for the data set (both horizontal and vertical).&nbsp; 
+  It is created from the information stored in MODELINFO, but may be frequently 
+  re-generated e.g to accomodate for different surface pressures.&nbsp; The GRIDINFO 
+  structure is generated by a call to 
+  ctm_grid.pro (see below).</p> 
+<p class="size16bi"><a name="6.7.1"></a>6.7.1 General usage</p>
+<blockquote>
+  <pre class="courier16">GridInfo = CTM_Grid( ModelInfo )</pre>
+</blockquote>
+<p class="size16bi"><a name="6.7.2"></a>6.7.2 Example</p>
+<blockquote>
+  <pre class="courier16">ModelInfo = ctm_type( 'GEOS_3', resolution=4 )
+ 
+; To have the GRIDINFO structure contain vertical layers 
+GridInfo = ctm_grid( ModelInfo ) 
+ 
+; To suppress vertical layers from the GRIDINFO structure 
+GridInfo = ctm_grid( ModelInfo, /No_Vertical )</pre>
+</blockquote>
+<p class="size16bi"><a name="6.7.3"></a>6.7.3 Structure Tag Names for GRIDINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>IMX</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">Number of grid boxes in longitude</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>JMX</i></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">Number of grid boxes in latitude</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>DI</i></td>
+    <td valign="top">float</td>
+    <td valign="top"><p align="justify">Width of grid boxes in degrees longitude</p></td>
+  </tr>
+  <tr> 
+    <td valign="top" height="24"><i>DJ</i></td>
+    <td valign="top" height="24">float</td>
+    <td valign="top" height="24"><p align="justify">Width of 
+      grid boxes in degrees latitude</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>XEDGE</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Longitude 
+      at western edge of grid box in degrees</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>XMID</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Longitude 
+      at center of each grid box in degrees</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>YEDGE</i></td>
+    <td valign="top">float array</td>
+    <td valign="top"><p align="justify">Latitude 
+      at southern edge of grid box in degrees</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I> YMID</I></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"> 
+      <p align="justify"> Latitude at center of each grid box in degrees 
+    </p></td>
+  </tr>
+</table>
+<p align="justify"> When GRIDINFO 
+  contains vertical information (i.e. when the <em><strong>/NO_VERTICAL</strong></em> keyword to CTM_GRID is omitted), then the following fields are added:</p> 
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>LMX</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">The number of vertical layers</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>SIGEDGE</I></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Unitless sigma coordinate at the bottom edge of each vertical level.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>SIGMID</i></td>
+    <td valign="top">float array</td>
+    <td valign="top"><p align="justify">Unitless 
+      sigma coordinate at the center of each vertical level.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>ETAEDGE</I></td>
+    <td valign="top">float 
+      array </td>
+    <td valign="top"> <p align="justify">For hybrid 
+        P-sigma coordinate data sets, defines the unitless ETA coordinate at the 
+        bottom edge of each vertical level.&nbsp; If ETAEDGE and ETAMID are defined, 
+      then SIGEDGE and SIGMID will be zero (and vice-versa).&nbsp; </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>ETAMID</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"> <p align="justify">For hybrid 
+        P-sigma coordinate data sets, defines the unitless ETA coordinate at center 
+        of each vertical level.&nbsp; If ETAEDGE and ETAMID are defined, then SIGEDGE 
+      and SIGMID will be zero (and vice-versa).&nbsp; </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>PEDGE</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Pressure 
+        at bottom edge of each vertical level (computed 
+      from pressure values using a fit to the US standard atmosphere)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>PMID</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Pressure 
+        at center of each vertical level (computed 
+      from pressure values using a fit to the US standard atmosphere)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>ZEDGE</i></td>
+    <td valign="top">float 
+      array</td>
+    <td valign="top"><p align="justify">Altitude 
+        at bottom edge of each vertical level (computed 
+      from pressure values using a fit to the US Standard Atmosphere)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>ZMID</i></td>
+    <td valign="top">float array</td>
+    <td valign="top"><p align="justify">Altitude 
+        at center of each vertical level (computed from pressure values using a 
+      fit to the US Standard Atmosphere)</p></td>
+  </tr>
+</table>
+<p align="justify"> The computation 
+  of pressures and altitudes may at some point be improved to allow for different 
+  surface pressures for individual grid boxes.&nbsp; However, this can be pretty 
+  complicated in terms of averaging.</p>
+<p align="justify">NOTE: 
+  The correspondence between IDL and FORTRAN data types is as follows:</p>
+<ul class="disc">
+  <li>IDL fix 
+    = Fortran INTEGER*2</li>
+  <li>IDL long 
+    = Fortran INTEGER*4</li>
+  <li>IDL float 
+    = Fortran REAL*4</li>
+  <li> IDL double 
+    = Fortran REAL*8</li>
+</ul>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.8"></a>6.8 The TRACERINFO structure</p>
+<p align="justify">This structure contains 
+  information about the various quantities stored in the model output.&nbsp; Tracers 
+  are indexed by number, and the number is usually identical to the tracer number 
+  used in the model, but it may be offset by a multiple of a large number (usually 
+  100 or 1000) to distinguish between different diagnostics.</p> 
+<p align="justify"> This structure 
+  will be returned from procedure ctm_tracerinfo.pro.&nbsp; 
+  The information about all tracers is stored in the file tracerinfo.dat.&nbsp; 
+  This file is only read once, however, it can be reloaded with:</p> 
+<blockquote>
+  <pre class="courier16">ctm_tracerinfo, /force_reading</pre>
+</blockquote>
+<p align="justify"> You can pass either a tracer 
+  name or number to ctm_tracerinfo.pro.</p>
+<p class="size16bi"><a name="6.8.1"></a>6.8.1 Structure Tag Names for TRACERINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><i>name</i></td> 
+    <td valign="top">string</td> 
+    <td valign="top"> <p align="justify">Short 
+        tracer name (8 characters or less)  </p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>fullname</I></td>
+    <td valign="top">string</td>
+    <td valign="top"><p align="justify">Full tracer name</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>mwt</i></td>
+    <td valign="top">float</td>
+    <td valign="top"><p align="justify">Mole weight of tracer in g.&nbsp; Can be used to convert 
+        from mixing ratio to mass and vice versa.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>index</I></td>
+    <td valign="top">long</td>
+    <td valign="top"><p align="justify">Tracer number (index).</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>molc</I></td>
+    <td valign="top">float</td>
+    <td valign="top"><p align="justify">Number of carbon atoms (used to convert ppbv to ppbC).</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>scale</I></td>
+    <td valign="top">float</td>
+    <td valign="top"><p align="justify">Scale factor that must be applied to convert output to 
+        standard unit given in <I>tracerinfo.unit</I>.&nbsp; NOTE: This relies  on consistent output within all models!</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>unit</i></td> 
+    <td valign="top">string </td> 
+    <td valign="top"> 
+      <p align="justify">Standard unit that shall be used for display of data for 
+        this tracer.&nbsp; Units can be converted with ctm_convert_unit (still 
+      in progress...)</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><em>is_edged</em></td>
+    <td valign="top">long</td>
+    <td valign="top"><p align="justify">Is this tracer defined on level edges?</p></td>
+  </tr>
+</table>
+<p align="justify"> NOTE: 
+  The correspondence between IDL and FORTRAN data types is as follows:</p>
+<ul class="disc">
+  <li>IDL fix = Fortran INTEGER*2</li>
+  <li>IDL long = Fortran INTEGER*4</li>
+  <li>IDL float = Fortran REAL*4</li>
+  <li> IDL double = Fortran REAL*8</li>
+</ul>
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.9"></a>6.9 The DIAGINFO structure</p> 
+<p align="justify">This structure holds information 
+  about the individual diagnostics from all models.&nbsp; It is be returned from 
+  procedure ctm_diaginfo.pro.
+  The information about all diagnostics is stored in the file diaginfo.dat.&nbsp; 
+  This file is only read once, however, it can be reloaded with </p> 
+<blockquote> 
+   <pre class="courier16">ctm_diaginfo, /force_reading</pre>
+</blockquote>
+<p align="justify"> You can pass 
+  either a category name or diagnostic number to <font SIZE-1>ctm_tracerinfo.pro. 
+  Note, however, that category names are unique, while numbers may be used repeatedly 
+  (e.g. 45 for <tt>IJ-AVG-$</tt>, 43 for <tt>CHEM-L=$</tt>).</p>
+<p class="size16bi"><a name="6.9.1"></a>6.9.1 Structure Tag Names for DIAGINFO</p>
+<table border="1" bordercolor="#000000" cellpadding="5" cellspacing="0" width="90%">
+  <tr bgcolor="#CCCCCC"> 
+    <th width="15%" valign="top"> 
+      <I>Tag Name</I>
+    </th>
+    <th width="21%" valign="top"> 
+      Type
+    </th>
+    <th valign="top"> 
+      Description
+    </th>
+  </tr>
+  <tr> 
+    <td valign="top"><I>category</I></td>
+    <td valign="top">string</td>
+    <td valign="top"><p align="justify">The diagnostic name (e.g.<span class="courier16"> IJ-AVG-$</span>)</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>maxtracer</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">This field is used for &quot;source-type&quot; diagnostics 
+        where the tracer number is misused as a general identifier (e.g. such 
+        as for lightning NOx in the GISS&ndash;II model).&nbsp; For all &quot;good&quot; 
+        diagnostics, this number is 1.&nbsp; (NOTE: For the GEOS-CHEM model, this 
+        tag name is obsolete, since all &quot;maxtracer-like&quot; diagnostics 
+    have been removed).</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><I>offset</I></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">An offset 
+        (multiple of 100 or 1000) that is added to the tracer number as stored in 
+      the output file to uniquely identify the quantity.</p></td>
+  </tr>
+  <tr> 
+    <td valign="top"><i>spacing</i></td>
+    <td valign="top">fix</td>
+    <td valign="top"><p align="justify">The interval 
+        (usually a number like 100 or 1000) that will be added internally to tracer 
+      numbers in order to separate tracers from different diagnostics.</p></td>
+  </tr>
+</table>
+<p align="justify">NOTE: IDL fix = Fortran INTEGER*2.</p> 
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="6.10"></a>6.10 About 4-dimensional data blocks in GAMAP</p>
+<p align="justify"><em>In a nutshell:</em> Reading and writing DATAINFO structure for 4D data blocks is now possible in GAMAP. Reading must be done with <a href="by_alphabet/gamap_c.html#CTM_GET_DATA" target="_blank">CTM_GET_DATA</a> and it is exactly the same as with 2D or 3D cases. For a correct writing, you must specify<span class="courier16"> FileType=106 </span>when calling CTM_MAKE_DATAINFO. That's it.</p>
+<p align="justify">In GAMAP v2.11, the FileType 106 has been introduced. FileType is a tag of the <a href="#6.4">DATAINFO structures</a>. When set to 106, it is basically a flag for 4D data block. <a href="by_alphabet/gamap_c.html#CTM_WRITEBPCH" target="_blank">CTM_WRITEBPCH</a>, <a href="by_alphabet/gamap_c.html#CTM_READ3DB_HEADER" target="_blank">CTM_READ3DB_HEADER</a>, <a href="by_alphabet/gamap_c.html#CTM_OPEN_FILE" target="_blank">CTM_OPEN_FILE</a>, and <a href="by_alphabet/gamap_c.html#CTM_READ_DATA" target="_blank">CTM_READ_DATA</a> have been modified to handle that case, so that you can write and read the DATAINFO structure for 4D data. </p>
+<p align="justify">Also be sure to view our <a href="timeseries_brief_tutorial.pdf" target="_blank">brief tutorial about working with GEOS&ndash;Chem timeseries output data</a> (e.g. files generated by the ND48, ND49, ND50, and ND51 diagnostics, as well as met fields and BPCH files).</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="6.10.1"></a>6.10.1 Writing a 4-D data block into a binary punch (BPCH) file:</p>
+<p align="justify">Here is a very simple example of writing one 4D data block into a <a href="#6.2">BPCH file</a>: </p>
+<blockquote>
+<pre class="courier16">;; ------ create 4D data:
+;; let's create 27 timeseries, each with 4 points
+Data      = Randomu(seed,3,3,3,4) 
+
+; Create modelinfo and datainfo structures
+; assume GEOS-4 4x5 grid
+ModeIinfo = CTM_Type( 'GEOS-4', res=4 )
+GridInfo  = CTM_Grid( modelinfo )
+
+;; ------ create DataInfo structure: 
+Success   = CTM_Make_Datainfo( Data,                         $
+                               NewDataInfo,                  $
+                               NewFileInfo,                  $
+                               Filetype=106,                 $
+                               Model=ModelInfo,              $
+                               Grid=GridInfo,                $ 
+                               DiagN='IJ-AVG-$',             $
+                               Tracer=1,                     $
+                               Tau0=12.,                     $
+                               Tau1=84.,                     $
+                               Dim=Size( Data, /Dimension ), $
+                               First=[1,1,1],                $
+                               /No_Global )
+
+;; ------ write data into a BPCH file::
+CTM_WriteBpch, NewDataInfo, NewFileInfo, FileName='filename.bpch'</pre>
+</blockquote>
+<p align="justify">This is the same as with 3D or 2D data. The only difference is that you need to manually specify<span class="courier16"> FileType=106 </span>in the call to <a href="by_alphabet/gamap_c.html#CTM_MAKE_DATAINFO" target="_blank">CTM_MAKE_DATAINFO</a>. That's it. </p>
+<p align="justify">However TAU1 can be useful if correctly set. Here, we have 4 time steps. We want them to cover 4 days, assuming DATA is a daily value. We can set TAU at midday: </p>
+<blockquote>
+<pre class="courier16">tau0 = nymd2tau(19850101,120000) ; --&gt; 12
+tau1 = nymd2tau(19850104,120000) ; --&gt; 84</pre>
+</blockquote><br>
+
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="6.10.2"></a>6.10.2 Reading a 4-D data block from binary punch (BPCH) file:</p>
+<p align="justify">Data can be accessed as usual with <a href="by_alphabet/gamap_c.html#CTM_GET_DATA" target="_blank">CTM_GET_DATA</a>:</p>
+<blockquote>
+<pre class="courier16">;; Info is an array of structures
+ctm_get_data, Info, file='filename.bpch' </pre>
+</blockquote>
+<p align="justify">The first 4D data block can be accessed with: </p>
+<blockquote>
+<pre class="courier16">data = *info[0].data
+help, data</pre>
+</blockquote>
+<p align="justify"><strong>Caution </strong>: the<span class="courier16"> gamap.pro </span>routine disregards the 4th dimension. To access the 4th dimension, you need to use CTM_GET_DATA as above.</p>
+<p align="justify">This is basically it. The main interest here is to combine separate data block with different TAU0 values into one block, while keeping access to a lot of information through the<span class="courier16"> Info </span>structure. Routines to handle the specific cases of ND49 and ND48 GEOS-Chem output are being developed right now. Stay tuned.</p>
+
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="6.10.3"></a>6.10.3 Some basic manipulations</p>
+<p>A very basic plot: </p>
+<blockquote>
+<pre class="courier16">;; data are in a pointer and 4D
+plot, (*info[0].data)[0,0,0,*], title='first time series' 
+print, ‘First TS starts at:' + info[0].tau0
+print, ‘First TS ends at:' + info[0].tau1</pre>
+</blockquote>
+<p>Information about <strong>grid </strong>, <strong>model </strong> is easily accessed from: </p>
+<blockquote>
+<pre class="courier16">GetModelAndGridInfo, info[0], modelInfo, gridinfo</pre>
+</blockquote>
+<p>TimeSeries <strong>location </strong>(s) in the first dataset: </p>
+<blockquote>
+<pre class="courier16">;; offsets
+Lon0        = Info[0].First[0] – 1 
+Lat0        = Info[0].First[1] – 1
+Z0          = Info[0].First[2] – 1
+LonVector   = GridInfo.XMid[ Lon0 : Lon0+Info[0].Dim[0]-1 ]
+LatVector   = GridInfo.YMid[ Lat0 : Lat0+Info[0].Dim[1]-1 ]
+LevelVector = GridInfo.ZMid[ Z0   :   Z0+Info[0].Dim[2]-1 ]</pre>
+</blockquote>
+<p>Then, the timeseries</p>
+<blockquote>
+<pre class="courier16">
+(*info[0].data)[ i, j, k,*]</pre>
+</blockquote>
+<p>is located at:</p>
+<blockquote>
+<pre class="courier16">Lon = LonVector[i]
+Lat = LatVector[j]
+Lev = LevelVector[k]</pre>
+</blockquote>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+<p align="center" class="size14bi"><A HREF="Chapter_5.html">Previous</A> | <A HREF="Chapter_7.html">Next</A> | <a href="Chapter_6.html" target="_blank">Printable View (no frames)</a></p>
+</body>
+</html>

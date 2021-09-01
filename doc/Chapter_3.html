@@ -1,0 +1,1300 @@
+<html>
+<HEAD>
+<!-- GEOS-Chem style sheet -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+<TITLE>GAMAP User Guide</TITLE>
+<!-- GEOS-Chem style sheet -->
+<link rel="stylesheet" href="../gamap.css" type="text/css"> 
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="#FF0000">
+<p align="center" class="size20bi">GAMAP v2&ndash;19 User Guide</p>
+<p align="center" class="size14bi"><A HREF="Chapter_2.html">Previous</A> | <A HREF="Chapter_4.html">Next</A> | <a href="Chapter_3.html" target="_blank">Printable View (no frames)</a></p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size24bi"><a name="3"></a>3. GAMAP Color Tables</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.1"></a>3.1 Overview</p>
+<p align="justify">Most modern 32-bit color displays (e.g. PC &amp; Mac) allow you to display several million gradations of color.  However, for scientific visualization and plotting purposes, it is much easier to use a smaller subset of colors. For this reason, GAMAP was designed to use 256 colors. This means that GAMAP works equally well with 8-bit displays (e.g. X-Terminals), 16-bit displays, 24-bit displays (e.g. Sun/SPARC workstations) and 32-bit displays.</p>
+<p>The main GAMAP color table routines are listed below:</p>
+      <table width="95%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" align="center">
+        <tr bgcolor="#CCCCCC">
+          <td width="30%">File Name</td>
+          <td>Description</td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16">idl_startup.pro</td>
+          <td class="size16"><p align="justify">Startup script for IDL. This script calls the MYCT routine in order to define the color table that will be used at IDL startup.</p></td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16"><a href="by_alphabet/gamap_c.html#CINDEX" target="_blank">cindex.pro</a></td>
+          <td class="size16"> Displays the current colors in the color table with their index numbers overlayed on each color. Very useful for comparing color tables. </td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16"><a href="by_alphabet/gamap_c.html#COLORBAR" target="_blank">colorbar.pro</a></td>
+          <td class="size16"><p align="justify">Draws a colorbar (legend) with labels. Some of the GAMAP plotting routines (e.g. TVMAP, TVPLOT, CTM_PLOT) will call COLORBAR directly to place a color bar below each plot panel. </p></td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16"><a href="by_alphabet/gamap_c.html#COLORBAR_NDIV (FUNCTION)" target="_blank">colorbar_ndiv.pro</a></td>
+          <td class="size16"><p align="justify">Returns the maximum number of colorbar divisions possible (up to a user-defined limit) such that tickmarks are placed in between colors. Can be used in conjunction with COLORBAR, or routines which call COLORBAR.</p></td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16"><a href="by_alphabet/gamap_m.html#MYCT" target="_blank">myct.pro</a></td>
+          <td class="size16"><p align="justify">Loads either an IDL standard colortable (#0&ndash;39) or one of the ColorBrewer tables. You can also create customized color tables as well.</p></td>
+        </tr>
+        <tr valign="top">
+          <td class="courier16"><a href="by_alphabet/gamap_m.html#MYCT_DEFINE" target="_blank">myct_define.pro</a></td>
+          <td class="size16"><p align="justify">Defines the <tt>!MYCT</tt> system variable with default values. <tt>!MYCT</tt> is used to make colortable parameters available to the GAMAP's various plotting programs.</p>
+          <p align="justify"><span class="size12i">NOTE: MYCT_DEFINE is called by MYCT. You probably will never have to call MYCT_DEFINE directly.</span></p></td>
+        </tr>
+      </table>            
+<p align="justify">We will describe these routines in more detail below.</p>
+      <p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+	  <p class="size20bi"><A NAME="3.2"></a>3.2 Defining colortables with MYCT</p>
+	  <p align="justify">MYCT is the main GAMAP color routine. It can be used to replace the current colortable with a new one, and possesses many  features that make it more flexible than IDL's standard LOADCT command.</p>
+<p align="justify">MYCT can be used to load one of several color tables (including the standard IDL color tables and the <em><a href="#license">ColorBrewer</a></em> tables; see <a href="#3.3">Chapter 3.3</a> for more information). MYCT also defines some useful <a href="#3.2.3">drawing colors</a> (e.g. common colors such as red, blue, black, white, yellow, etc). that can be used to highlight lines and/or plotting symbols.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.1"></a>3.2.1 MYCT Basics</p>
+<p align="justify">When you start IDL,  MYCT will load a color table by default (cf <a href="#3.2.6">Chapter 3.2.6</a>). At any time during your IDL session, you may call MYCT to load a new color table.</p>
+<p align="justify">MYCT stores its color table information in the file <tt>gamap2/colors/tables/gamap_colors.tbl</tt>.  This file includes 130 tables (indexed from 0-129). They are all illustrated in <a href="http://acmg.seas.harvard.edu/geos/wiki_docs/gamap_color_table_file.pdf" target="_blank">this PDF document</a>.</p>
+<blockquote>
+<table width="50%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" >
+  <tr bgcolor="#CCCCCC">
+    <td width="30%"><strong>Color table #</strong></td>
+    <td><strong>Description</strong></td>
+  </tr>
+  <tr>
+     <td>0-40</td>
+     <td><p>Color tables that ship with IDL</p></td>
+  </tr>
+  <tr>
+     <td>41-58</td>
+     <td>Sequential <em>ColorBrewer</em>* color tables</td>
+  </tr>
+  <tr>
+     <td>59-67</td>
+     <td>Diverging <em>ColorBrewer</em>* color tables</td>
+  </tr>
+  <tr>
+     <td>68-125</td>
+     <td>Qualitative <em>ColorBrewer*</em> color tables</td>
+  </tr>
+  <tr>
+     <td>126-129</td>
+     <td>Custom color tables</td>
+  </tr>
+</table>
+
+<p align="justify" class="size14i">*Click <a href="#license">HERE</a> to view ColorBrewer license information</p>
+</blockquote>  
+
+<p align="justify">You can load a table at anytime interactively with the /X keyword:</p>
+<blockquote>
+<pre>IDL> myct, /x</pre></blockquote>
+<p align="justify">This will open a dialog box that will allow you to pick a color table.  You can pick &amp; choose color tables until you find one that you like.</p>
+<blockquote><p><img src="img/fig_3_2_1.png" width="277" height="449" alt="MYCT dialog box"></p></blockquote>
+<p align="justify">You can also specify a color table by its number (0-129) or its name when you call MYCT:</p>
+<blockquote>
+  <pre>IDL> myct, 59
+IDL> myct, 'rainbow'</pre></blockquote>
+<p>Some special color tables (see <a href="#3.3">Chapter 3.3</a>) can also be specified with an IDL keyword:<blockquote>
+  <pre>IDL> myct, /WhGrYlRd
+IDL> myct, /BuYlYlRd</pre></blockquote>
+<p align="justify">Every call to MYCT will update a system variable named <tt>!MYCT</tt>, which can be used to pass information about currently-loaded  color table to GAMAP as well as any IDL programs that you have written. We will discuss how the <tt>!MYCT</tt> system variable works in <a href="#3.2.5">Chapter 3.2.5</a>.</p>
+<p align="left"><img src="img/black_rule.jpg" width="1000%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.2"></a>3.2.2 Setting the number of colors in the color table</p>
+<p align="justify">Each MYCT color table contains a pre-set number of colors. You can choose to override this default number of colors by supplying a new value via the <em><strong>NCOLORS</strong></em><strong></strong> keyword. For example</p>
+<blockquote>
+  <pre>IDL> myct, /x, ncolors=6
+IDL> tvmap, dist(20,20), /sample, /cbv</pre></blockquote>
+<p>will pop open a dialog box to allow you to pick the color table with the number of colors that you have specified. The call to TVMAP creates a sample plot to display the color table that we have selected. In the plot below we have selected table #4 (Blue/Green/Red/Yellow) with 6 colors.</p>
+<blockquote><p><img src="img/fig_3_2_2.png" width="500" height="350" alt="6 color plot"></p></blockquote>
+<p align="justify">NOTE: The qualitiative <em>ColorBrewer</em> color tables (#68 - #125) disregard the NCOLORS keyword.  The number of colors (which is stored in  <tt>!MYCT.NCOLORS</tt>, as described in <a href="#3.2.5">Chapter 3.2.5</a>) will be  exactly the number of colors that appears in the table name. For example, typing:</p>
+<blockquote><pre>IDL> myct, 'set3', ncolors=6</pre></blockquote>
+<p align="justify">will load the Set3 color table, which only has 3 colors.  Therfore, these qualitative color tables can be directly used in GAMAP without further manipulation.  Typing</p>
+<blockquote>
+  <pre>IDL> tvmap, dist(20,20), /sample, /cbv</pre></blockquote>
+</p>will yield this plot with only 3 colors:
+<blockquote><p><img src="img/fig_3_2_2b.png" width="500" height="350" alt="3 color plot"></p></blockquote>
+
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.3"></a>3.2.3 MYCT's &quot;drawing colors&quot;</p>
+
+
+<p align="justify">At any time, you may view the currently-loaded color table with GAMAP routine CINDEX (which stands for  &quot;color index&quot;). For example, if you wanted to view the colors in the White-Green-Yellow-Red color table, you would type:</p>
+<blockquote>
+  <pre>IDL> myct, /WhGrYlRd
+IDL&gt; cindex</pre></blockquote>
+<p align="justify">which would produce the following plot:</p>
+<blockquote><p><img src="img/WhGrYlRd_v211.png" width="558" height="75" alt="WGYL color table w/ CINDEX" border="1" bordercolor="#000000"></p></blockquote>
+<p align="justify">In the plot above, each color is printed, along with its corresponding color index number (i.e. the white numbers that are superimposed on each colored box).</p>
+<p align="justify">You will notice that the bottom row of colors in the CINDEX plot does not correspond to the color table that you requested.  MYCT reserves colors #0-17 for the "drawing colors". These are common colors like white, black, green, red, etc. that are intended to be used as the outline color of plot or map windows, or to denote plotting symbols. MYCT will always load these same drawing colors regardless of which other color table option we select.</p>
+<p align="justify">MYCT then reserves colors #18 and onward for the color table that we have selected. In this example, the White-Green-e also referred to by the system variable <tt>!MYCT.BOTTOM</tt>. (We'll learn more about the !MYCT system variable in <a href="#3.2.5">Chapter 3.2.5</a>).Yellow-Red color table contains 20 predefined colors. Therefore, MYCT will reserve color indices #18 thru #37 for these colors. Color  #18 is also known as the "bottom" color, and may b</p>
+<p align="justify">In older versions of GAMAP (v2-11 and prior), the default MYCT drawing colors used to be brighter, as shown in this plot:</p>
+<blockquote><p><img src="img/WhGrYlRd.png" width="558" height="75" alt="WGYL color table w/ CINDEX" border="1" bordercolor="#000000"></p></blockquote>
+<p align="justify">However, these brighter drawing colors tended to become  &quot;washed out&quot; on the newer computer displays. Since GAMAP v2&ndash;11, we have redefined the drawing colors corresponding to the first plot shown above.  However, for the sake of backwards compatbility, you can request the older, brighter drawing colors by calling MYCT with the <em><strong>/BRIGHT_COLORS</strong></em> keyword:</p>
+<blockquote><pre>IDL> myct, /WhGrYlRd, /bright_colors</pre></blockquote>
+<p align="justify">Here is a list of MYCT's standard drawing colors, plus the  drawing colors that were defined in GAMAP v2&ndash;11 and prior versions:</p>
+  
+<blockquote>
+  <table width="60%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" >
+  <tr bgcolor="#CCCCCC">
+    <td><strong>Drawing<br>color #</strong></td>
+    <td><strong>Default drawing colors<br>call with: <tt>MYCT</tt></strong></td>
+    <td><strong> GAMAP v2&ndash;11 and older versions<br>
+      call with: <tt>MYCT, /BRIGHT_COLORS</tt></strong></td>
+  </tr>
+  <tr>
+     <td>0</td>
+     <td>White</td>
+     <td>White</td>
+  </tr>
+  <tr>
+     <td>1</td>
+     <td>Black</td>
+     <td>Black</td>
+  </tr>
+  <tr>
+     <td>2</td>
+     <td>Red</td>
+     <td>Red</td>
+  </tr>
+  <tr>
+     <td>3</td>
+     <td>Green</td>
+     <td>Green</td>
+  </tr>
+  <tr>
+     <td>4</td>
+     <td>Blue</td>
+     <td>Blue</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Orange</td>
+    <td>Yellow</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Purple</td>
+    <td>Magenta</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>Light Red</td>
+    <td>Cyan</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Light Green</td>
+    <td>Light Red</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Light Blue</td>
+    <td>Light Green</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Light Orange</td>
+    <td>Light Blue</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Light Purple</td>
+    <td>Black</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>Gray 85%</td>
+    <td>Gray 85%</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>Gray 67%<br>
+(aka &quot;Dark Gray&quot;)</td>
+    <td>Gray 67%<br>
+(aka &quot;Dark Gray&quot;)</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>Gray 50%<br>
+      (aka &quot;Medium Gray&quot;)</td>
+    <td>Gray 50%<br>
+(aka &quot;Medium Gray&quot;)</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>Gray 33%<br>
+      (aka &quot;Gray&quot;, &quot;Light Gray&quot;)</td>
+    <td>Gray 33%<br>
+(aka &quot;Gray&quot;, &quot;Light Gray&quot;)</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>Gray 15%</td>
+    <td>Gray 15%</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>Undefined<br>
+      currently set to &quot;white&quot;</td>
+    <td>Undefined<br>
+      currently set to &quot;white&quot;</td>
+  </tr>
+</table>
+</blockquote>  
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.4"></a>3.2.4 Other useful MYCT keywords</p>
+<p align="justify">Here is a list of several additional keywords to MYCT that you can use to customize your color table:</p>
+<p align="justify">The <em><strong>/VERBOSE</strong></em> keyword tells MYCT to print information about the color table you just loaded:</p>
+<blockquote>
+<pre class="courier16">IDL> myct, /WhGrYlRd, /verbose
+
+... prints to the screen ...
+
+% Color table      : WHITE-GREEN-YELLOW-RED (spectral)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 20</pre></blockquote>
+<p>The <em><strong>/REVERSE</strong></em> keyword lets you  flip the color table ordering . In this example, the White-Green-Yellow-red color table will be reversed such that it starts with red and finishes with blue:</p>
+<blockquote>
+  <pre>IDL> myct, /WhGrYlRd, /reverse
+IDL> cindex</pre></blockquote>
+<blockquote><p><img src="img/fig_3_2_4a.png" width="575" height="113" alt="Fig 3.2.4a"></p></blockquote>
+<p align="justify">The <em><strong>RANGE</strong></em> keyword lets you clip bottom/top of the initial color table, within 0-1:</p>
+<blockquote>
+  <pre>IDL> myct, /WhGrYlRd, Range=[0.2, 0.8]
+IDL> cindex</pre></blockquote>
+<blockquote><p><img src="img/fig_3_2_4b.png" width="575" height="113" alt="Fig 3.2.4b"></p></blockquote>
+<p align="justify">The <em><strong>VALUE</strong></em> keyword lets you lower the brightness of the color table (0: darkest, 1: brightest).  The default is 1.</p>
+<blockquote>
+  <pre>IDL> myct, /WhGrYlRd, value=0.8
+IDL> cindex</pre></blockquote>
+<blockquote><p><img src="img/fig_3_2_4c.png" width="575" height="113" alt="Fig 3.2.4c"></p></blockquote>
+
+<p align="justify">The <em><strong>SATURATION</strong></em> keyword lets you lower the color saturation (0: darkest, 1: brightest). The default is 1.</p>
+<blockquote><pre>IDL> myct, /WhGrYlRd, saturation=0.5
+IDL> cindex</pre></blockquote>
+<blockquote><p><img src="img/fig_3_2_4d.png" width="575" height="113" alt="Fig 3.2.4d"></p></blockquote>
+
+<p>Note: The <em><strong>/REVERSE</strong></em>,<em><strong> RANGE</strong></em>, <em><strong>VALUE</strong></em>, and <em><strong>SATURATION</strong></em> keywords take effect once a table is loaded. If you load a table  interactively with the<em> <strong>/X</strong></em> keyword, you will not see their effect until you call CINDEX or any display routine.</p>
+<p>You will find more example and other keywords in the routine header.  <em><strong>VALUE</strong></em>  and <em><strong>SATURATION</strong></em> are the V and S from the HSV color space.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.5"></a>3.2.5 The !MYCT system variable</p>
+<p align="justify">IDL system variables are special variables that are globally accessible to all routines at all times. These variables are essentially IDL structures that store many different pieces of data under different structure tag names. System variables begin with an <tt>!</tt> character to denote that they are different from regular IDL variables.</p>
+<p align="justify">When MYCT is called for the  very first time (at the start of your IDL session), a new system variable named <tt>!MYCT</tt> is created (cf <a href="#3.2.6"> Chapter 3.2.6</a>).  <tt>!MYCT</tt> contains the individual colortable parameters that correspond to the currently-loaded color table.  Every time you call MYCT to load a new color table, the <tt>!MYCT</tt> variable gets  updated automatically with the settings pertaining to the new color table.</p>
+<p align="justify">The advantage of defining the color table parameters in <tt>!MYCT</tt> is   that the GAMAP graphics routines (e.g. TVMAP, TVPLOT, CTM_PLOT, COLORBAR, etc.)   can obtain default colortable settings directly from this variable.   Therefore, when you call the GAMAP plotting routines, you do not need to explicitly tell GAMAP how many colors are defined in the current color table, at which index the color table begins, etc.</p>
+<p align="justify"><tt>!MYCT</tt> contains the following tag names:</p>
+<blockquote>
+  <table width="80%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" >
+  <tr bgcolor="#CCCCCC">
+    <td width="25%"><strong><tt>MYCT</tt> tag name</strong></td>
+    <td><strong> Description<tt></tt></strong></td>
+  </tr>
+  <tr>
+     <td class="courier16">!MYCT.WHITE</td>
+     <td>Index array for <a href="#3.2.3">drawing color</a> WHITE</td>
+  </tr>
+  <tr>
+     <td class="courier16">!MYCT.BLACK</td>
+     <td>Index array for drawing color BLACK</td>
+  </tr>
+  <tr>
+     <td class="courier16">!MYCT.RED</td>
+     <td>Index array for drawing color RED</td>
+  </tr>
+  <tr>
+     <td class="courier16">!MYCT.GREEN</td>
+     <td>Index array for drawing color GREEN</td>
+  </tr>
+  <tr>
+     <td class="courier16">!MYCT.BLUE</td>
+     <td>Index array for drawing color BLUE</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.ORANGE</td>
+    <td>Index array for drawing color ORANGE (not available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.PURPLE</td>
+    <td>Index array for drawing color PURPLE (not available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTRED</td>
+    <td>Index array for drawing color LIGHT RED</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTGREEN</td>
+    <td>Index array for drawing color LIGHT GREEN</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTBLUE</td>
+    <td>Index array for drawing color LIGHT BLUE</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTORANGE</td>
+    <td>Index array for drawing color LIGHT ORANGE (not available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTPURPLE</td>
+    <td>Index array for drawing color LIGHT PURPLE (not available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.YELLOW</td>
+    <td>Index array for drawing color YELLOW (only available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.MAGENTA</td>
+    <td>Index array for drawing color (only available with  <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.CYAN</td>
+    <td>Index array for drawing color (only available with <tt>/BRIGHT_COLORS</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY85</td>
+    <td>Index array for drawing color GRAY 85%</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY67</td>
+    <td>Index array for drawing color GRAY 67%</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.DARKGRAY<br></td>
+    <td>Synonym for <tt>!MYCT.GRAY67</tt></td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY50</td>
+    <td>Index array for drawing color GRAY 50%</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.MEDIUMGRAY</td>
+    <td>Synonym for <tt>!MYCT.GRAY50</tt></td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY33</td>
+    <td>Index array for drawing color GRAY 33%</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY</td>
+    <td>Synonym for <tt>!MYCT.GRAY33</tt></td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.LIGHTGRAY</td>
+    <td>Synonym for <tt>!MYCT.GRAY33</tt></td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.GRAY15</td>
+    <td>Index array for drawing color GRAY 15%</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.FILE</td>
+    <td>Name of the file containing color table information (e.g <tt>gamap_colors.tbl</tt>)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.NAME</td>
+    <td>Name of the currently loaded color table</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.INDEX</td>
+    <td>Number of the currently loaded color table (0&ndash;129)</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.BOTTOM</td>
+    <td>Index where the color table begins. All colors below <tt>!MYCT.BOTTOM</tt> are the <a href="#3.2.3">drawing colors</a>.</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.NCOLORS</td>
+    <td>Number of colors in the color table (counting from <tt>!MYCT.BOTTOM</tt> onward). This value may be modified with the <em><strong><a href="#3.2.2">NCOLORS</a></strong></em><a href="#3.2.2"> keyword</a>.</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.RANGE</td>
+    <td>Range of the color table that will be displayed (default is [0,1]). This value may be modified with the <strong><em><a href="#3.2.4">RANGE</a></em></strong><a href="#3.2.4"> keyword</a>.</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.SAT</td>
+    <td>Saturation value of the color table (default is 1.) This may be modified with the <em><strong><a href="#3.2.4">SATURATION </a></strong></em><a href="#3.2.4">keyword</a>.</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.VALUE</td>
+    <td>Brightness value for the color table (default is 1). This may be modified with the<em><strong> <a href="#3.2.4">VALUE</a></strong></em><a href="#3.2.4"> keyword</a>.</td>
+  </tr>
+  <tr>
+    <td class="courier16">!MYCT.REVERSE</td>
+    <td>=1 if the color table has been reversed; = 0 if not. This may be modified with the<a href="#3.2.4"> <strong>/REVERSE</strong> keyword</a>.</td>
+  </tr>
+  </table>
+</blockquote>  
+
+
+<p align="justify">Several of these tag names associate a drawing color with its appropriate color index (e.g. <tt>!MYCT.RED</tt> is color #2, <tt>!MYCT.BLUE</tt> is color #4). Others denote the number of colors, the colortable bottom, saturation, and hue values associated with the given colortable.</p>
+<p align="justify">You can print the values of <tt>!MYCT</tt> to the screen with the following command:</p>
+<blockquote><pre>IDL> myct, /WhGrYlRd
+IDL> help, !myct, /stru
+** Structure <1eac9a08>, 33 tags, length=112, data length=108, refs=2:
+   WHITE           INT              0
+   BLACK           INT              1
+   RED             INT              2
+   GREEN           INT              3
+   BLUE            INT              4
+   ORANGE          INT              5
+   PURPLE          INT              6
+   LIGHTRED        INT              7
+   LIGHTGREEN      INT              8
+   LIGHTBLUE       INT              9
+   LIGHTORANGE     INT             10
+   LIGHTPURPLE     INT             11
+   YELLOW          INT              0
+   MAGENTA         INT              0
+   CYAN            INT              0
+   GRAY85          INT             12
+   GRAY67          INT             13
+   DARKGRAY        INT             13
+   GRAY50          INT             14
+   MEDIUMGRAY      INT             14
+   GRAY33          INT             15
+   GRAY            INT             15
+   LIGHTGRAY       INT             15                             
+   GRAY15          INT             16
+   FILE            STRING    '/home/bmy/IDL/gamap2/color/tables/gamap_colors.t'...
+   NAME            STRING    'WHITE-GREEN-YELLOW-RED (spec)'
+   INDEX           INT            128
+   BOTTOM          LONG                18
+   NCOLORS         LONG                20
+   RANGE           FLOAT     Array[2]
+   SAT             FLOAT           1.00000
+   VALUE           FLOAT           1.00000
+   REVERSE         INT              0</pre></blockquote>
+<p align="justify">You may also use <tt>!MYCT</tt> directly at the IDL prompt or in any of your own IDL programs.  For example, to overlay red points on top of a graph, type:</p>
+<blockquote>
+<pre>IDL> plot, findgen(100)
+IDL> oplot, findgen(50)*2, psym=sym(1), color=!MYCT.RED</pre></blockquote>
+<p align="justify">which will generate this plot:</p>
+<p><img src="img/fig_3.2.5.png" width="500" height="350" alt="Fig 3.2.5"></p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.2.6"></a>3.2.6 Specifying the default color table when you start IDL</p>
+<p align="justify">From our discussion in <a href="Chapter_2.html#2.2">Chapter 2.2</a>, we saw that one of the things that the <tt>idl_startup.pro</tt> file does is to define the color table that is loaded at the start of an IDL session. This will be the &quot;default&quot; color table, and will remain selected until you call MYCT again to select a different color table. </p>
+<p align="justify">Now that we know a little more about how MYCT works, let's look at the <tt>idl_startup.pro</tt> file in more depth.  You will see these commands, prefaced by IDL comments.</p>
+<blockquote><pre>; Load a custom spectral colortable (White-Green-Yellow-Red)
+if ( !D.NAME ne 'NULL' ) then MyCt, /Verbose, /WhGrYlRd
+
+; Test if !MYCT was created before we reference it below
+DefSysV, '!MYCT', Exists=MYCT_Exists
+
+; If we have loaded a MYCT color table, then the default background
+; color will be white.  Also set the default foreground color to black.
+if ( !D.NAME ne 'NULL' and MYCT_Exists ) then !P.COLOR = !MYCT.BLACK</pre></blockquote>
+<p align="justify">The first command will cause the <tt>idl_startup.pro</tt> script to only call MYCT if the IDL display device supports  interactive plotting.   (The display device name is given by the  <tt>!D.NAME</tt> field of the <tt>!D</tt> system variable.) Otherwise, MYCT will not be called. In this command, we also specify the default color table (here White-Green-Yellow-Red) that we would like to be loaded when IDL starts.. You may modify this line of code accordingly if you wish to specify a different color table.</p>
+<p align="justify">The second command tests if the <tt>!MYCT</tt> system variable was created successfully.  The result is saved in the variable <tt>MYCT_Exists</tt>, which is used in the command immediately below.</p>
+<p align="justify">The third command will set the default background color to black. This will only happen if (1) the IDL display device supports interactive plotting, and (2) MYCT has already been called once (and the <tt>!MYCT</tt> variable has already been created). If you would like to specify a different default background color (e.g. <tt>!MYCT.BLUE</tt>, <tt>!MYCT.RED</tt>), you may modify this command accordingly.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="left" class="size20bi"><a name="3.3"></a>3.3. Examples using the GAMAP color tables</p>
+<p align="justify"> Here we show some examples with the new GAMAP custom color tables. </p>
+<p align="justify">As we learned in <a href="#3.2.3">Chapter 3.2.3</a>, colors #0 &ndash; #17 of each color table below denote the MYCT drawing colors. The actual color table begins at color #18 (a.k.a. <span class="courier16">!MYCT.BOTTOM</span>).</p>     
+<p align="justify">All color tables here are shown with their original number of colors. You can manipulate each color table with the keywords described in <a href="#3.2.4">Chapter 3.2.4</a>.</p>
+<p align="left">We will use the <a href="http://www.colorbrewer.org" target="_blank"><em>ColorBrewer</em></a> color abbreviations for color names:</p>
+<table align="center" width="60%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5">
+        <tr> 
+          <td> 
+            <div align="center">Bk 
+              = Black</div>
+          </td>
+          <td> 
+            <div align="center">Br 
+              = Brown</div>
+          </td>
+          <td> 
+            <div align="center">Bu 
+              = Blue </div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Gr 
+              = Green</div>
+          </td>
+          <td> 
+            <div align="center">Gy 
+              = Gray </div>
+          </td>
+          <td> 
+            <div align="center">Or 
+              = Orange</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Pi 
+              = Pink</div>
+          </td>
+          <td> 
+            <div align="center">Pu 
+              = Purple</div>
+          </td>
+          <td> 
+            <div align="center">Rd 
+              = Red</div>
+          </td>
+        </tr>
+        <tr> 
+          <td> 
+            <div align="center">Wh 
+              = White </div>
+          </td>
+          <td> 
+            <div align="center">Yl 
+              = Yellow</div>
+          </td>
+          <td> 
+            <div align="center">&nbsp;</div>
+          </td>
+        </tr>
+      </table>
+<p align="justify">Note that some color table <a href="http://www.personal.psu.edu/cab38/ColorBrewer/ColorBrewer_RGB.html" target="_blank">definitions</a> were taken from the <a href="http://www.colorbrewer.org" target="_blank"><em>ColorBrewer</em></a> package. <a href="#license">License information</a> as well as other references are listed below.</p>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.3.1"></a>3.3.1 Diverging Color Tables</p>
+<p align="justify">Diverging color tables typically have a middle neutral color (usually white or yellow), from which the colors on each side of the colorbar diverge. These are useful for creating difference plots, which have both negative and positive data points.</p>
+<p align="justify">However, some diverging color tables were created without the middle neutral color. For example, the <em><a href="http://www.colorbrewer.org" target="_blank">ColorBrewer</a></em> Red-Blue table has 128 reds + 128 blues, but no neutral color, as shown by the following plot: </p>
+<blockquote>
+  <pre>IDL> myct, 'RdBu'
+IDL> tvmap, dist(20,20), /sample, /cbv</pre>
+<p><img src="img/fig_3_3_1a.png" width="557" height="350" alt="Fig 3.3.1a"></p>
+</blockquote>
+
+
+<p>For color tables such as these,  MYCT can add the middle color with the<em><strong> /MIDCOLORPRESENT</strong></em> keyword.        With an odd number of colors, the middle color saddles the center of the color bar        as expected: <br>
+</p>
+<blockquote>
+  <pre>IDL> myct, 'RdBu', ncolors=7, /MidColorPresent
+IDL> tvmap, data, /sample, /cbv</pre>
+<p><img src="img/fig_3_3_1b.png" width="557" height="350" alt="Fig 3.3.1b"></p>
+</blockquote>
+<p align="justify">If you are using an even number of colors, there is usually no middle color to show. Using<em><strong> /MIDCOLORPRESENT</strong></em> keyword will insert the middle color twice, once on each side of the middle of the bar.</p>
+<blockquote>
+  <pre>IDL> myct, 'RdBu', ncolors=14, MidColorPresent
+IDL> tvmap, data, /sample, /cbv, div=3</pre>
+<p><img src="img/fig_3_3_1c.png" width="557" height="350" alt="Fig 3.3.1c"></p>
+</blockquote>
+<p align="justify">NOTE: If you call MYCT with:</p>
+<blockquote><pre>IDL> myct, /X, /MidColorPresent</pre></blockquote>
+      <p>Then you will not see the middle color displayed in the dialog box. The middle color is added after the color table has been loaded.<br>
+      </p>
+      <p>Here we shall examine some useful diverging color tables:</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+      <p class="size16bi"><a name="3.3.1.1"></a>3.3.1.1 BLUE&#8212;WHITE&#8212;RED </p>
+      <pre class="courier16">IDL&gt; myct, /BuWhRd, /verbose</pre>      <p><u>MYCT will print:</u></p>
+      <pre class="courier16">% Color table      : BLUE-WHITE-RED (diverging)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 27</pre>      <p><u>Color index 
+        numbers (with drawing colors):</u></p>
+      <p><img src="img/BuWhRd_v211.png" width="558" height="75" border="1" bordercolor="#000000"></p>
+      <p><u>Color shade 
+        plot:</u></p>
+      <p><img src="img/BuWhRd_plot.png" width="350" height="280"></p>
+      <p align="justify">Note 
+        that the BLUE&ndash;WHITE&ndash;RED (27 colors) table tends to saturate 
+        at the maximum and minimum values. This may cause problems when converting 
+        to PostScript output, or when using a video projector. For this reason, 
+        we recommend using  BLUE&ndash;WHITE&ndash;WHITE&ndash;RED instead.</p>
+            <p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+      <p class="size16bi"><a name="3.3.1.2"></a>3.3.1.2 BLUE&#8212;WHITE&#8212;WHITE&#8212;RED<br>
+(aka the &quot;DIFFERENCE&quot; color table)</p>
+      <pre class="courier16">IDL&gt; myct, /BuWhWhRd, /berbose</pre>      <p>or</p>
+      <pre class="courier16">IDL&gt; myct, /DIFF, /verbose</pre>
+      <p><u>MYCT will print:</u></p>
+      <pre class="courier16">% Compiled module  : REVERSE.
+% Color table      : BLUE-WHITE-WHITE-RED (diverging)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 20</pre>      <p><u>Color index 
+        numbers (with drawing colors):</u></p>
+      <p><img src="img/BuWhWhRd_v211.png" width="558" height="75" border="1" bordercolor="#000000"></p>
+      <p><u>Color shade 
+        plot:</u></p>
+      <p><img src="img/BuWhWhRd_plot.png" width="350" height="280"></p>
+      <p align="justify">The BLUE&ndash;WHITE&ndash;WHITE&ndash;RED 
+        colortable was constructed by concatenating the reverse of the WHITE&ndash;BLUEcolortable with the WHITE&ndash;RED colortable (see below). The 
+        2 center colors are white, with 9 gradations of reds and blues (20 colors 
+        total). The 2 center white colors facilitate the alignment of colorbar 
+        tickmarks in between colors. Note that this colortable does not saturate 
+        at the minimum and maximum values as does Blue-White-Red. 
+        We recommend using this color table to create difference plots. (Also 
+        note, if you need to use white to denote &quot;missing data&quot; values, 
+        then please consider using the BLUE&ndash;YELLOW&ndash;YELLOW&ndash;RED.)</p>
+      <p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+      <p class="size16bi"><a name="3.3.1.3"></a>3.3.1.3 BLUE&#8212;YELLOW&#8212;RED</p>
+      <pre class="courier16">IDL&gt; myct, /BuYlRd, /verbose</pre>      <p><u>MYCT will print:</u></p>
+      <pre class="courier16">% Color table      : BLUE-YELLOW-RED (diverging)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 12</pre><p><u>Color index numbers (with drawing colors):</u><br>
+      </p>
+      <p><img src="img/BuYlRd_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+      <p><u>Color shade 
+        plot:</u></p>
+      <p><img src="img/BuYlRd_plot.png" width="350" height="280"></p>
+      <p align="justify">The BLUE&ndash;YELLOW&ndash;RED 
+        color table contains 6 gradations of blues and 6 gradations of reds (12 
+        colors total). However, there is no &quot;center&quot; color. Therefore, 
+        the BLUE&ndash;YELLOW&ndash;YELLOW&ndash;RED color table may be a better choice.</p>
+            <p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+      <p class="size16bi"><a name="3.3.1.4"></a>3.3.1.4 BLUE&#8212;YELLOW&#8212;YELLOW&#8212;RED</p>
+      <pre class="courier16">IDL&gt; myct, /BuYlYlRd, /verbose</pre>      <p><u>MYCT will print:</u></p>
+      <pre class="courier16">% Color table      : BLUE-YELLOW-YELLOW-RED (diverging)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 12</pre>      <p><u>Color index 
+        numbers (with drawing colors):</u></p>
+      <p><img src="img/BuYlYlRd_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+      <p><u>Color shade 
+        plot:</u></p>
+      <p><img src="img/BuYlYlRd_plot.png" width="350" height="280"></p>
+      <p align="justify">The 
+        BLUE&ndash;YELLOW&ndash;YELLOW&ndash;RED table has 5 divisions of blues &amp; 
+        reds separated by 2 yellow center colors (12 colors total). As with BLUE&ndash;WHITE&ndash;WHITE&ndash;RED, 
+        this facilitates placement of colorbar tickmarks in between colors. This 
+        is a good choice of difference colortable, particularly if you need to 
+        denote missing data values with white.</p>
+      <p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+      <p class="size16bi"><a name="3.3.1.5"></a>3.3.1.5 The DIAL/Lidar colortable </p>
+      <pre class="courier16">IDL&gt; myct, /dial, /verbose</pre>
+      <p><u>MYCT will print:</u></p>
+      <pre class="courier16">% Color table      : DIAL/LIDAR (diverging)<br>% Available Colors : 16777216<br>% Bottom for MYCT  : 18<br>% NColors for MYCT : 26</pre>
+      <p><u>Color index numbers (with drawing colors):</u></p>
+      <p><img src="img/DIAL_v211.png" width="558" height="75" border="1" bordercolor="#000000"></p>
+      <p><u>Color shade plot:</u></p>
+      <p><img src="img/DIAL_plot.png" width="350" height="280"></p>
+<p align="justify">The DIAL colortable was developed by Ed Browell for use in displaying lidar output data. It is a useful colortable for showing data with a large dynamic range. However, one bad feature is that extremely low values are rendered as purple. When using this color table to plot emissions over continents, then oceans or other places where no emissions exist will be rendered as pink &amp; purple, which many people can find annoying. For this reason, we recommend using one of the other GAMAP color tables if you need to display data with extremely small values. </p>
+<p class="size16bi"><a name="3.3.1.6"></a>3.3.1.6 Other diverging colortables</p>
+<p align="justify">Here is a list of the other diverging colortables  that MYCT can load.  Each of these color tables is plotted in<a href="http://acmg.seas.harvard.edu/geos/wiki_docs/gamap/gamap_color_table_file.pdf" target="_blank"> this document</a>.
+<blockquote>
+<table width="80%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" halign="center">
+  <tr bgcolor="#CCCCCC">
+    <td><strong>Table #</strong></td>
+    <td><strong>Name</strong></td>
+    <td><strong># of colors </strong></td>
+    <td><strong>Description</strong></td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>Haze</td>
+    <td>234</td>
+    <td>IDL color table 16</td>
+  </tr>
+  <tr>
+    <td>59</td>
+    <td>PuOr</td>
+    <td>234</td>
+    <td><em>ColorBrewer </em>color table: Purple ==&gt; Orange </td>
+  </tr>
+  <tr>
+    <td>60</td>
+    <td>BrBG</td>
+    <td>234</td>
+    <td><em>ColorBrewe</em>r<em> </em>color table: Brown ==&gt; Bluish green </td>
+  </tr>
+  <tr>
+    <td>61</td>
+    <td>PrGn</td>
+    <td>234</td>
+    <td><em>ColorBrewer</em> <em> </em>color table: Purple ==&gt; Green </td>
+  </tr>
+  <tr>
+    <td>62</td>
+    <td>PiYG</td>
+    <td>234</td>
+    <td><em>ColorBrewer </em>color table:  Pink ==&gt; Yellow ==&gt; Green</td>
+  </tr>
+  <tr>
+    <td>63</td>
+    <td>RdBu</td>
+    <td>234</td>
+    <td><em>ColorBrewer</em><em> </em>color table:  Red ==&gt; Blue</td>
+  </tr>
+  <tr>
+    <td>64</td>
+    <td>RdGy</td>
+    <td>234</td>
+    <td><em>ColorBrewer</em><em> </em>color table:  Red ==&gt; Gray</td>
+  </tr>
+  <tr>
+    <td>65</td>
+    <td>RdYlBu</td>
+    <td>234</td>
+    <td><em>ColorBrewer </em>color table:  Red ==&gt; Yellow ==&gt; Blue</td>
+  </tr>
+  <tr>
+    <td>66</td>
+    <td>Spectral</td>
+    <td>234</td>
+    <td><em>ColorBrewer</em><em> </em>color table:  Red ==&gt; Orange ==&gt; Yellow ==&gt; Green ==&gt; Blue</td>
+  </tr>
+  <tr>
+    <td>67</td>
+    <td>RdYlGn</td>
+    <td>234</td>
+    <td><em>ColorBrewer</em> <em> </em>color table: Red ==&gt; Yellow ==&gt; Green</td>
+  </tr>
+</table>
+</blockquote>
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.3.2"></a>3.3.2 Spectral Color Tables</p>
+<p align="justify">These color tables run sequentially from one color to another (white to blue, white to red, blue to red via green &amp; yellow, etc). Spectral color 
+tables are best for displaying concentration data.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.1"></a>3.3.2.1 WHITE&#8212;BLUE</p>
+<pre>IDL&gt; myct, /WhBu, /verbose</pre>      <p><u>MYCT will print:</u></p>
+<pre>% Color table      : WHITE-BLUE (spectral)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 10</pre>      
+<p><u>Color index numbers (with drawing colors):</u></p>
+<p><img src="img/WhBu_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+<p><u>Color shade plot:</u></p>
+<p><img src="img/WhBu_plot.png" width="350" height="280"></p>
+<p align="justify">The WHITE&ndash;BLUE and WHITE&ndash;RED colortables (10 colors) are suitable for plotting data which monotonically increases from zero to some maximum value (e.g. emission fluxes).</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.2"></a>3.3.2.2 WHITE&#8212;RED</p>
+<pre>IDL&gt; myct, /WhRd, /verbose</pre>	  
+<p><u>MYCT will print:</u></p>
+<pre>% Color table      : WHITE-RED (spectral)
+% Available Colors : 16777216<br>% Bottom for MYCT  : 18
+% NColors for MYCT : 10</pre>      
+<p><u>Color index numbers (with drawing colors):</u></p>
+<p><img src="img/WhRd_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+<p><u>Color shade plot:</u></p>
+<p><img src="img/WhRd_plot.png" width="350" height="280"></p>
+<p align="justify">The WHITE&ndash;BLUE and WHITE&ndash;RED colortables (10 colors) are suitable for plotting data which monotonically increases from zero to some maximum value (e.g. emission fluxes).</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.3"></a>3.3.2.3 Modified Spectrum</p>
+<pre>IDL&gt; myct, /ModSpec, /verbose</pre>      <p><u>MYCT will print:</u></p>
+<pre>% Color table      : MODIFIED SPECTRUM (spectral)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 11</pre>      
+<p><u>Color index numbers (with drawing colors):</u></p>
+<p><img src="img/ModSpec_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+<p><u>Color shade plot:</u></p>
+<p><img src="img/ModSpec_plot.png" width="350" height="280"></p>
+<p align="justify">The MODIFIED SPECTRUM (ModSpec) color table contains 11 continuous color gradations from blue to red, with yellow in the center. ModSpec is         very useful for creating plots in which you do not want to represent the lowest value with white (e.g. tracer concentrations).</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.4"></a>3.3.2.4 WHITE&#8212;GREEN&#8212;YELLOW&#8212;RED</p>
+<pre>IDL> myct, /WhGrYlRd, /verbose</pre>
+<p><u>MYCT will print:</u></p>
+<pre>% Color table      : WHITE-GREEN-YELLOW-RED (spectral)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 20</pre>      
+<p><u>Color index numbers (with drawing colors):</u></p>
+<p><img src="img/WhGrYlRd_v211.png" width="558" height="75" border="1" bordercolor="#000000"></p>
+<p><u>Color shade plot:</u></p>
+<p><img src="img/WhGrYlRd_plot.png" width="350" height="280"></p>
+<p align="justify">The WHITE&ndash;GREEN&ndash;YELLOW&ndash;RED has the first color index as white, with the remainder being 19 continuous gradations from blue to red. this is a good choice of color table for quantities which monotonically increase from zero to a maximum value.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.5"></a>3.3.2.5 WHITE&#8212;GRAY&#8212;BLACK</p>
+<pre>IDL&gt; myct, /WhGyBk, /verbose</pre>      <p><u>MYCT will print:</u></p>
+<pre>% Color table      : WHITE-GRAY-BLACK (spectral)
+% Available Colors : 16777216
+% Bottom for MYCT  : 18
+% NColors for MYCT : 9</pre>      
+<p><u>Color index numbers (with drawing colors):</u></p>
+<p><img src="img/WhGyBk_v211.png" width="558" height="50" border="1" bordercolor="#000000"></p>
+<p><u>Color shade plot:</u> </p>
+<p><img src="img/WhGyBk_plot.png" width="350" height="280"></p>
+<p align="justify">WHITE&ndash;GRAY&ndash;BLACK is a grayscale colortable with 10 gradations from white to black.  This colortable may not saturate as much as the standard IDL colortable 0.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size16bi"><a name="3.3.2.6"></a>3.3.2.6 Other spectral color tables</p>
+<p align="justify">Here is a list of the other spectral colortables that MYCT can load.  Each of these color tables is plotted in<a href="http://acmg.seas.harvard.edu/geos/wiki_docs/gamap/gamap_color_table_file.pdf"> this document</a>.
+<p align="justify">Several of the IDL color tables listed here are kind of funky (they have really bright colors or weird color separations).  You may find that the <em>ColorBrewer</em> color tables do a better job of displaying your data.
+<blockquote>
+  <table width="80%" border="1" bordercolor="#000000" cellspacing="0" cellpadding="5" halign="center">
+    <tr bgcolor="#CCCCCC">
+      <td><strong>Table #</strong></td>
+      <td><strong>Name</strong></td>
+      <td><strong><em># of colors </em></strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>BW-LINEAR</td>
+      <td>234</td>
+      <td>IDL color table 0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>BLUE/WHITE</td>
+      <td>234</td>
+      <td>IDL color table 1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>GRN-RED-BLU-WHT</td>
+      <td>234</td>
+      <td>IDL color table 2</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>RED TEMPERATURE</td>
+      <td>234</td>
+      <td>IDL color table 3</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>BLUE/GREEN/RED/YELLOW</td>
+      <td>234</td>
+      <td>IDL color table 4</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>STD GAMMA-II</td>
+      <td>234</td>
+      <td>IDL color table 5</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>PRISM</td>
+      <td>234</td>
+      <td>IDL color table 6</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>RED-PURPLE</td>
+      <td>234</td>
+      <td>IDL color table 7</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>GREEN/WHITE LINEAR</td>
+      <td>234</td>
+      <td>IDL color table 8</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>GRN/WHT EXPONENTIAL</td>
+      <td>234</td>
+      <td>IDL color table 9</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>GREEN-PINK</td>
+      <td>234</td>
+      <td>IDL color table 10</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>BLUE-RED</td>
+      <td>234</td>
+      <td>IDL color table 11</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>LEVEL</td>
+      <td>234</td>
+      <td>IDL color table 12</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>RAINBOW</td>
+      <td>234</td>
+      <td>IDL color table 13</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>STEPS</td>
+      <td>234</td>
+      <td>IDL color table 14</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>STERN SPECIAL</td>
+      <td>234</td>
+      <td>IDL color table 15</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>Blue + Pastel + Red</td>
+      <td>234</td>
+      <td>IDL color table 17</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Pastels</td>
+      <td>234</td>
+      <td>IDL color table 18</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>Hue Sat Lightness 1</td>
+      <td>234</td>
+      <td>IDL color table 19</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Hue Sat Lightness 2</td>
+      <td>234</td>
+      <td>IDL color table 20</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>Hue Sat Value 1</td>
+      <td>234</td>
+      <td>IDL color table 21</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>Hue Sat Value 2</td>
+      <td>234</td>
+      <td>IDL color table 22</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>Purple-Red + Stripes</td>
+      <td>234</td>
+      <td>IDL color table 23</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>Beach</td>
+      <td>234</td>
+      <td>IDL color table 24</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Mac Style</td>
+      <td>234</td>
+      <td>IDL color table 25</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>Eos A</td>
+      <td>234</td>
+      <td>IDL color table 26</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>Eos B</td>
+      <td>234</td>
+      <td>IDL color table 27</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>Hardcandy</td>
+      <td>234</td>
+      <td>IDL color table 28</td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>Nature</td>
+      <td>234</td>
+      <td>IDL color table 29</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>Ocean</td>
+      <td>234</td>
+      <td>IDL color table 30</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>Peppermint</td>
+      <td>234</td>
+      <td>IDL color table 31</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>Plasma</td>
+      <td>234</td>
+      <td>IDL color table 32</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>Blue-Red</td>
+      <td>234</td>
+      <td>IDL color table 33</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>Rainbow</td>
+      <td>234</td>
+      <td>IDL color table 34</td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>Blue Waves</td>
+      <td>234</td>
+      <td>IDL color table 35</td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>Volcano</td>
+      <td>234</td>
+      <td>IDL color table 36</td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>Waves</td>
+      <td>234</td>
+      <td>IDL color table 37</td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>Rainbow 18</td>
+      <td>234</td>
+      <td>IDL color table 38</td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>Rainbow + white</td>
+      <td>234</td>
+      <td>IDL color table 39</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>Rainbow + Black</td>
+      <td>234</td>
+      <td>IDL color table 40</td>
+    </tr>
+    <tr>
+      <td>41</td>
+      <td>YlGn</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Yellow ==&gt; Green </td>
+    </tr>
+    <tr>
+      <td>42</td>
+      <td>YlGnBu</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Yellow ==&gt; Green ==&gt; Blue </td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>GnBu</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Green ==&gt; Blue </td>
+    </tr>
+    <tr>
+      <td>44</td>
+      <td>BuGn</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Blue ==&gt; Green</td>
+    </tr>
+    <tr>
+      <td>45</td>
+      <td>PuBuGn</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Purple ==&gt; Blue ==&gt; Green</td>
+    </tr>
+    <tr>
+      <td>46</td>
+      <td>PuBu</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Purple ==&gt; Blue</td>
+    </tr>
+    <tr>
+      <td>47</td>
+      <td>BuPu</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Blue ==&gt; Purple</td>
+    </tr>
+    <tr>
+      <td>48</td>
+      <td>RdPu</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Red ==&gt; Purple</td>
+    </tr>
+    <tr>
+      <td>49</td>
+      <td>PuRd</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Purple ==&gt; Red</td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>OrRd</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Orange ==&gt;Red</td>
+    </tr>
+    <tr>
+      <td>51</td>
+      <td>YlOrRd</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Yellow ==&gt; Orange ==&gt; Red</td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td>YlOrBr</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Yellow ==&gt; Orange ==&gt; Brown</td>
+    </tr>
+    <tr>
+      <td>53</td>
+      <td>Purples</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Shades of purple</td>
+    </tr>
+    <tr>
+      <td>54</td>
+      <td>Blues</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Shades of blue</td>
+    </tr>
+    <tr>
+      <td>55</td>
+      <td>Greens</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Shades of green</td>
+    </tr>
+    <tr>
+      <td>56</td>
+      <td>Oranges</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Shades of orange</td>
+    </tr>
+    <tr>
+      <td>57</td>
+      <td>Reds</td>
+      <td>234</td>
+      <td><em>ColorBrewer</em> color  table: Shades of red</td>
+    </tr>
+    <tr>
+      <td>58</td>
+      <td>Greys</td>
+      <td>234</td>
+      <td><p><em>ColorBrewer</em> color table: Shades of grey</p></td>
+    </tr>
+  </table>
+</blockquote>
+<p class="size16bi">&nbsp;</p>
+
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.4"></a>3.4 Displaying color tables</p>
+<p align="justify">In this section, we highlight some of the routines that you can use to display color tables in your plots.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.4.1"></a> 3.4.1 CINDEX</p>
+<p align="justify">As we saw in <a href="#3.2.3">Chapter 3.2.3</a>, the CINDEX routine is a quick way to view the color table that is currently loaded. The color index numbers are plotted atop of each color in the color table.</p>
+<blockquote>
+  <pre>IDL> myct, /WhGrYlRd
+IDL&gt; cindex</pre>
+  <p><img src="img/WhGrYlRd_v211.png" width="558" height="75" alt="WGYL color table w/ CINDEX" border="1" bordercolor="#000000"></p>
+</blockquote>
+<p align="justify">CINDEX is useful to visually examine the color table that is currently loaded, but cannot be used to include a colorbar on a plot.</p>
+
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.4.2"></a> 3.4.2 COLORBAR</p>
+<p align="justify">The GAMAP routine COLORBAR (adapted from David Fanning) is the best way to display the currently-loaded color table in your plots. You may call the routine COLORBAR by itself:</p>
+<blockquote>
+<pre>IDL> myct, 'YlOrBr', ncolors=14
+IDL&gt; colorbar, divisions=8</pre>
+<img src="img/fig_3_4_2a.png" width="500" height="351" alt="Fig 3.4.2a" border="1" bordercolor="#000000"></blockquote>
+<p align="justify">This will place a colorbar in a default location (i.e. at the bottom of the plotting window, in order to leave room for the plot window. In this case, since we did not use the <em><strong>MIN</strong></em> and <em><strong>MAX</strong></em> keywords to specify the min and max values of the data range, the ticks that are shown underneath the colorbar represent the color indices (14 colors starting from <tt>!MYCT.BOTTOM = 18</tt>).</p>
+<p align="justify">You can change the extent of the plot window occupied by the colorbar with the <em><strong>POSITION</strong></em> keyword, as shown here:</p>
+<blockquote>
+  <pre>IDL> colorbar, divisions=8, position=[ 0.1, 0.1, 0.9, 0.8 ]</pre>
+<img src="img/fig_3_4_2b.png" width="500" height="351" alt="Fig 3.4.2b" border="1" bordercolor="#000000"></blockquote>
+
+<p align="justify">The POSITION keyword accepts values in terms of the fraction of the plotting window. The coordinates start at the bottom left corner. In the above example, <em><strong>POSITION=[ 0.1, 0.1, 0.9, 0.8 ]</strong></em> tells COLORBAR that the bottom left corner of the color bar should be at coordinates (X=0.1, Y= 0.1) and the upper right corner should be at coordinates (X=0.9, Y=0.8).</p>
+<p align="justify">Most of the time, you will not have to call COLORBAR directly. The TVMAP and TVPLOT routines call the COLORBAR routine automatically. (You may call TVMAP and TVPLOT directly, or from a higher-level routine such as CTM_PLOT or GAMAP.) If you recall, we showed you this example in <a href="#3.3.1">Chapter 3.3.1</a>:</p>
+<blockquote>
+  <pre>IDL> myct, 'RdBu', ncolors=14, MidColorPresent
+IDL> tvmap, data, /sample, /cbvertical, div=3</pre>
+<p><img src="img/fig_3_3_1c.png" width="557" height="350" alt="Fig 3.3.1c"></p>
+</blockquote>
+<p align="justify">Here we called TVMAP to create a sample plot. We used the <em><strong>/CBVERTICAL</strong></em> keyword to place the colorbar in the vertical rather than in the default horizontal dimension.</p>
+<p align="justify">For a complete list of options that you can use with the COLORBAR routine, please see <a href="by_alphabet/gamap_c.html#COLORBAR" target="_blank">this entry in Chapter 5: GAMAP Reference</a>.</p>
+<p align="justify">Also  see <a href="Chapter_4.html">Chapter 4: Using GAMAP</a> for a thorough discussion of GAMAP's powerful plotting capabilities.</p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.4.3"></a> 3.4.3 COLORBAR_NDIV</p>
+<p align="justify">The GAMAP routine COLORBAR_NDIV (by Philippe Le Sager) returns the maximum number of colorbar divisions possible (up to a user-defined limit) such that tickmarks are placed in between colors. </p>
+<p align="justify">COLORBAR_NDIV may be used in conjunction with the CTM_PLOT, TVMAP, TVPLOT, or COLORBAR routines.</p>
+<p>Here is an example:</p>
+<blockquote><pre>; Two plots per page
+multipanel, 2
+
+; Load WHITE-RED colortable
+myct, /WhRd
+
+; Create a sample plot with colorbar tickmarks
+; not aligned on color boundaries
+tvmap, Dist(19,19), /Sample, /Cbar,       $
+       /NoGxLabels, /NoGyLabels, Divisions=4, $
+       Title='w/o COLORBAR_NDIV'
+
+; Use COLORBAR_NDIV in call to TVMAP in order to
+; ensure colorbar tickmark alignment in between colors
+tvmap, Dist(19,19), /Sample, /CBar,     $
+      /NoGxLabels, /NoGyLabels,            $
+      Divisions=ColorBar_NDiv( MaxDiv=6 ), $
+      Title='with COLORBAR_NDIV'</pre></blockquote>      
+<p>This will produce the following plot:</p>
+<p><img src="img/colorbar_ndiv.png" width="600" height="400"></p>
+<p align="justify">Note that in the right panel the colorbar tickmarks ONLY occur at the interval between 2 different colors, whereas in the left panel, they do not. </p>
+<p align="left"><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p class="size20bi"><a name="3.4.4"></a> 3.4.4 The /CBSCALE keyword</p>
+<p align="justify" >The  <em><strong>/CBSCALE</strong></em> keyword for GAMAP multiplies or divides the colorbar tick labels by powers of  10. As a result the tick labels are shorter, less likely to overlap, and  easier to read. The program automatically chooses a suitable power of 10 and prints the multiplicative factor in the colorbar units. This is like the  default behavior of Matlab plot command. The attached png file illustrates this new feature.</p>
+<p align="justify" class="size16bi"><img src="img/tvmap-cbscale.png" width="906" height="364" alt="CBSCALE plot"></p> 
+
+
+<p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+<p align="justify" class="size20bi"><a name="3.5"></a>3.5. Color Table References</p>
+      <ul class="disc">
+        <li>
+          <p><em>GAMAP color table file and its basic usage</em> by P. Le Sager and R. Yantosca </p>
+        </li>
+        <ul class="circle">
+		  <li>
+		    <p><a href="http://wiki.seas.harvard.edu/geos-chem/index.php/Image:Gamap_color_table_file.pdf" target="_blank">http://wiki.seas.harvard.edu/geos-chem/index.php/Image:Gamap_color_table_file.pdf</a></p>
+		  </li>
+        </ul>
+	    <li><p><span class="size16i">Working With Color in IDL</span> by Chris Holmes</p></li>
+        <ul class="circle">
+		  <li>
+		    <p><a href="http://acmg.seas.harvard.edu/forum_files/cdh_ColorInIDL.pdf" target="_blank">http://acmg.seas.harvard.edu/forum_files/cdh_ColorInIDL.pdf</a></p></li>
+        </ul>
+
+		
+        <li><p><span class="size16i">Working With Color</span>  by David Fanning</p></li>
+		<ul class="circle">
+          <li><p><a href="http://www.dfanning.com/color_tips/working_with_color.pdf" target="_blank">http://www.dfanning.com/color_tips/working_with_color.pdf</a></p></li>
+        </ul>
+        <li>
+          <p>Light, A., and P.J. Bartlein. <span class="size16i">The end of the rainbow? Color schemes for improved 
+		  data graphics.</span>  <u>EOS Transactions of the American Geophysical Union</u>, 85(40), 385.</p>
+		</li>
+        <ul class="circle">
+           <li><p><a href="http://geography.uoregon.edu/datagraphics/EOS/Light&Bartlein.pdf" target="_blank">http://geography.uoregon.edu/datagraphics/EOS/Light&amp;Bartlein.pdf</a></p></li>
+        </ul>
+        <li>
+          <p>Color and Graphics with GAMAP on the GEOS&ndash;Chem wiki </p>
+          <ul>
+            <li>
+              <p><a href="http://wiki.geos-chem.org/Color_and_graphics_with_GAMAP" target="_blank">http://wiki.geos-chem.org/Color_and_graphics_with_GAMAP</a></p></li>
+          </ul>
+        </li>
+        <li>
+          <p>The ColorBrewer Package </p>
+        </li>
+        <ul class="circle">
+          <li><a href="http://www.colorbrewer.org" target="_blank">www.colorbrewer.org</a></li>
+          <li><a href="http://www.personal.psu.edu/cab38/ColorBrewer/ColorBrewer_RGB.html" target="_blank">An 
+             MS Excel Spreadsheet with ColorBrewer color table definitions</a></li>
+        </ul>
+      </ul>      
+      <p align="justify" class="size16bi"><a name="license"></a>Color Brewer License Info:</p>
+      <p align="justify">Licensed 
+        under the Apache License, Version 2.0 (the &quot;License&quot;); you may 
+        not use this file except in compliance with the License. You may obtain 
+        a copy of the License at: <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>. 
+        Unless required 
+        by applicable law or agreed to in writing, software distributed under 
+        the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES 
+        OR CONDITIONS OF ANY KIND, either express or implied. See the License 
+        for the specific language governing permissions and limitations under 
+        the License.</p>
+      <p><img src="img/black_rule.jpg" width="100%" height="2"></p>
+
+      <p align="center" class="size14bi"><A HREF="Chapter_2.html">Previous</A> | <A HREF="Chapter_4.html">Next</A> | <a href="Chapter_3.html" target="_blank">Printable View (no frames)</a></p>
+</body>
+</html>

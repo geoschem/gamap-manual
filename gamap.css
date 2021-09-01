@@ -1,0 +1,126 @@
+.size12{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+.size12b{
+    font-family: Arial, Helvetica, sans-serif, bold;
+    font-size: 12px;
+	font-weight: bold;
+}
+.size12bi {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+    font-weight: bold;
+}
+.size12i {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+}
+.size14{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+.size14b{
+    font-family: Arial, Helvetica, sans-serif, bold;
+    font-size: 14px;
+	font-weight: bold;
+}
+.size14bi{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: italic;
+    font-weight: bold;
+}
+.size14i{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: italic;
+}
+.size16{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+.size16b{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+	font-weight: bold;
+}
+.size16bi{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: italic;
+    font-weight: bold;
+}
+.size16i{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: italic;
+}
+.size20b{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+	font-weight: bold;
+}
+.size20b_red{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+	font-weight: bold;
+	color: #FF0000;
+}
+.size20bi{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+	font-style: italic;
+	font-weight: bold;
+}
+.size24b{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+	font-weight: bold;
+}
+.size24bi{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+	font-style: italic;
+	font-weight: bold;
+}
+.size28b{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+	font-weight: bold;
+}
+.size28bi{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+	font-style: italic;
+	font-weight: bold;
+}
+.courier14{
+    font-family: Courier New, Courier, mono;
+    font-size: 14px;
+}
+.courier16,pre,tt{
+    font-family: Courier New, Courier, mono;
+    font-size: 16px;
+}
+ul.disc{ 
+    list-style-type: disc; 
+}
+ul.circle{ 
+    list-style-type: circle; 
+}
+p,body,li,ol,td,th{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+a{
+    text-decoration: none;
+}
+a:link{ 
+    color: #0000FF; 
+}
+a:visited{ 
+    color: #FF0000; 
+}

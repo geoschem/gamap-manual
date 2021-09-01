@@ -1,0 +1,456 @@
+Modification history for all files in /home/bmy/IDL/gamap2/benchmark/
+last updated : 12/15/2016 13:50
+
+===================
+BENCHMARK_1MON.PRO
+===================
+      bmy, 09 Nov 2007: VERSION 1.01
+                        - based on "benchmark.pro"
+      bmy, 10 Jan 2011: VERSION 1.02
+                        - Now set proper symbolic links to
+                          diaginfo.dat and tracerinfo.dat 
+                        - Set 500hPa level for MERRA
+                        - Added /NO_PROFILES keyword to suppress
+                          printing of vertical profiles
+      bmy, 08 Jun 2011: VERSION 1.03
+                        - Updated comments
+                        - Added /NO_BUDGET, /NO_EMISSIONS, 
+                          /NO_PROFILES, /NO_CONC_MAPS, /NO_DIFFS, 
+                          /NO_JVALUES, /NO_RATIOS, /NO_FULLCHEM 
+                          keywords.
+                        - Now pass _EXTRA=e to all routines
+                        - Now use FILE_WHICH to locate the 
+                          diff_range.1mon file
+                        - Now look for diaginfo.dat and 
+                          tracerinfo.dat in RUNDIR_2.  Do not
+                          use symbolic links anymore.
+      bmy, 10 Jun 2011: - Now call EMISSION_RATIOS
+      bmy, 23 Jun 2011  - Now call ZONAL_DIFF
+      bmy, 18 Jul 2011  - Now pass /PRESSURE keyword to ZONAL_DIFF
+                          to create plots w/ pressure on Y-axis
+      bmy, 11 May 2012: GAMAP VERSION 2.16
+                        - Now do not stop the run if the two model 
+                          grids are equivalent.  This allows
+                          comparisons between GEOS-5, MERRA,
+                          GEOS-5.7 data.  
+                        - Return 500hPa level for GEOS-5.7 met
+      cdh, 18 Mar 2013: GAMAP VERSION 2.17
+                        - Added Zonal concentration plots for !
+                          1-month benchmarks
+      mps, 16 Sep 2013: - Now create AOD difference plots
+                        - Now create AOD map plots
+      mps, 18 Nov 2013: - Read in Model_1 and Model_2 as printed in input
+                          file. Previously, model names were converted to
+                          filename extensions using CTM_NamExt.
+                        - Update GetSfc500Levels to accept model names
+                        - Rename all instances of GEOS57_47L to GEOSFP_47L
+      mps, 02 Dec 2013: - Now create difference plots for 2-D and 3-D
+                          met fields
+      mps, 03 Dec 2013: - Now create absolute difference plots for J-values
+      mps, 21 Apr 2015: - Now create emission maps and emission difference
+                          plots
+      mps, 11 Sep 2015: - Now create stratospheric benchmark plots showing
+                          zonal mean differences and concentrations for
+                          100-0.01 hPa
+      mps, 04 Mar 2016: - Include MERRA2 in the check for equivalent
+                          vertical grids
+      mps, 29 Mar 2016: - Add plots for cloud optical depth
+
+===================
+DIFF_2D_MET.PRO
+===================
+      mps, 02 Dec 2013: - Initial version, based on differences.pro
+      ewl, 14 Mar 2016: - Fix bug in PlotPctDiff by passing Log=Log to TvMap
+
+===================
+DIFF_3D_MET.PRO
+===================
+      mps, 02 Dec 2013: - Initial version, based on differences.pro
+
+===================
+DIFF_CLOUDS.PRO
+===================
+      mps, 23 Mar 2016: - Initial version
+
+===================
+DIFFERENCES.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.01
+                        - Initial version
+      bmy, 20 Nov 2007: VERSION 1.02
+                        - Now draw out-of-bounds triangles for
+                          the colorbar when using the "small"
+                          data ranges.  New feature of TVMAP.
+      bmy, 07 May 2008: VERSION 1.03
+                        - Now allow for comparing models on 2
+                          different vertical grids.
+      bmy, 08 Feb 2011: VERSION 1.04
+                        - Now display in the top-of-plot title
+                          if the dynamic range option is used.
+      bmy, 08 Jun 2011: VERSION 1.05
+                        - Added /NO_FULLCHEM keyword
+                        - Now call COLORBAR with the UPOS keyword 
+                          to place the colorbar unit string properly
+                        - Now use appropriate settings for creating
+                          plots w/ the full dynamic range (/DYNRANGE)
+                        - Now restore !MYCT sysvar to previous
+                          settings upon exiting the program
+      mps, 29 Mar 2013: - Now plot HO2 differences
+
+===================
+DIFFERENCES_AOD.PRO
+===================
+      bmy, 09 Nov 2007: VERSION 1.01
+                        - Initial version
+      bmy, 20 Dec 2007: VERSION 1.02
+                        - Now pass the month as a keyword to
+                          put on the plot panel titles
+      bmy, 02 Jun 2011: VERSION 1.03
+                        - Make the colorbar a little wider
+                        - Reduce the character size CsFac to 0.75
+                          to better display long plot titles
+                        - Now call COLORBAR with the UPOS keyword 
+                          to place the colorbar unit string properly
+                        - Now use appropriate settings for creating
+                          plots w/ the full dynamic range (/DYNRANGE)
+                        - Also restore the !MYCT sysvar to defaults
+      mps, 16 Sep 2013: - Modified for 1-month benchmark output
+      bmy, 24 Jan 2014: GAMAP VERSION 2.17
+                        - Updated comments
+
+===================
+EMISSION_DIFFERENCES.PRO
+===================
+      mps, 21 Apr 2015: Initial version based on emission_ratios.pro
+
+===================
+EMISSION_MAPS.PRO
+===================
+      mps, 21 Apr 2015: Initial version based on emission_ratios.pro
+
+===================
+EMISSION_RATIOS.PRO
+===================
+      bmy, 10 Jun 2011: VERSION 1.00
+                        - Initial version, based on "ratios.pro"
+                        - Make sure directory ends with a path
+                          separator character
+      bmy, 23 Jun 2011: - Add ratio plot for lightning NOx
+      bmy, 27 Jun 2011: - Now split top-title into 2 lines
+      bmy, 11 Aug 2011: VERSION 1.01
+                        - Fix bug by making values less than 0.5
+                          not show up as missing data.
+      bmy, 16 Dec 2011: GAMAP VERSION 2.16
+                        - Remove ACET from dryleaf and ACET from
+                          grass.  These were GEIA diagnostics,
+                          which are now obsoleted.
+      mps, 02 Apr 2013: Renamed NOx-xxxx emissions diagnostics to
+                        NO-xxxx. NO emissions have now replaced
+                        NOx emissions in GEOS-Chem (v9-02h). 
+      mps, 15 Jul 2013: Fixed bug in MaxLev: Now plot column NO for
+                        anthro, aircraft, and lightning emissions.
+      mps, 25 Nov 2014: Now plot anthro + biofuel emissions because HEMCO
+                        does not separate them
+      ewl, 18 Mar 2015: Bug fixes: change NO, SO2, and SO4 anthro level 
+                        from 2 to 1; change 'Tracer_bf ge 1' to 'Tracer_bf 
+                        ge 0' to add biofuels to anthro in Create_Plots;
+                        change Files index from 0 to 1 for Data2 err msg. 
+
+===================
+FREQ_DIST.PRO
+===================
+      bmy, 12 Aug 2002: VERSION 1.01
+                        - adapted from Isabelle Bey's "comparison.pro"
+      bmy, 21 Jan 2003: VERSION 1.02
+                        - increased from 24 to 31 tracers  
+      bmy, 28 Apr 2004: VERSION 1.03
+                        - increased from 31 to 35 tracers
+      bmy, 03 May 2004: VERSION 1.04
+                        - increased from 35 to 39 tracers
+      bmy, 21 May 2004: VERSION 1.05
+                        - increased from 39 to 41 tracers
+      bmy, 02 Nov 2004: VERISION 1.06
+                        - bug fix: now print out top title on each
+                          page (when it is the first panel)
+      bmy, 06 May 2005: VERSION 1.07
+                        - Now use -9.99e30 to flag strat boxes
+      bmy, 08 Jul 2005: VERSION 1.08
+                        - Increased from 41 to 43 tracers
+      bmy, 09 Nov 2007: VERSION 1.09
+                        - Modified argument list and some 
+                          internal variable names.
+                        - Removed Radon keyword
+      bmy, 25 May 2011: VERSION 1.10
+                        - Added /DO_FULLCHEM keyword
+      bmy, 17 Apr 2012: GAMAP VERSION 2.16
+                        - Omit modelname error check
+      
+
+===================
+FULLCHEM_BUDGET.PRO
+===================
+      bmy, 15 Aug 2002: VERSION 1.01
+                        - adapted from Isabelle Bey's "budget.pro"
+      bmy, 14 Jan 2003: VERSION 1.02
+                        - In GEOS-CHEM v5-03+, ND44 saves out tracers
+                          using the CTM tracer number 
+      bmy, 30 Oct 2003: VERSION 1.03
+                        - now call PTR_FREE to free the heap memory
+                          so that we don't run out of memory
+                        - now compute mean mass-weighted OH instead
+                          of methyl chloroform lifetime
+ccc & bmy, 11 Aug 2010: VERSION 1.04
+                        - Updated computation of Ox budget
+      bmy, 10 Jan 2011: VERSION 1.05
+                        - Updated 200hPa level for MERRA
+      bmy, 08 Jun 2011: - Also print out MCF lifetime
+      bmy, 11 May 2012: GAMAP VERSION 2.16
+                        - Modified for GEOS-5.7.2 met
+      mps, 06 Jan 2014: - Fix bug in calculation of WetYear so that wetdep
+                          from convective updrafts is not double counted
+                          (P. Kasibhatla)
+      mps, 04 Mar 2016: - Modified for MERRA2 met
+
+===================
+FULLCHEM_EMISSIONS.PRO
+===================
+      bmy, 18 Jun 2001: VERSION 1.00
+      bmy, 20 Jun 2001: VERSION 1.01
+                        - now omit ALD2 (#11) from ANTHROPOGENIC
+      bmy, 20 Sep 2001: VERSION 1.02
+                        - now print ND11 acetone sources, sinks
+      bmy, 15 Aug 2002: VERSION 1.03
+                        - renamed to FULLCHEM_EMISSIONS
+                        - renamed FILE_NEW to FILENEW and 
+                          FILE_OLD to FILEOLD
+      bmy, 17 Jan 2003: VERSION 1.04
+                        - also sum up sulfate emission categories
+      bmy, 27 Mar 2003: VERSION 1.05
+                        - adjust FORMAT string for branch versions
+                        - now also print out NH3-NATU source
+      bmy, 09 Apr 2004: VERSION 1.06
+                        - Now print out emissions of BC/OC tracers
+                        - Now print out hydrophilic BC/OC which
+                          came from hydrophobic BC/OC
+      bmy, 28 Apr 2004: VERSION 1.07
+                        - Now print out dust emissions
+      bmy, 03 May 2004: VERSION 1.08
+                        - Now print out seasalt emissions
+      bmy, 21 May 2004: VERSION 1.09
+                        - Now print out ship exhaust SO2 emissions
+      bmy, 08 Jul 2005: VERSION 1.10
+                        - Updated for 43 tracers
+      bmy, 10 Jan 2011: VERSION 1.11
+                        - Now make numeric fields 13 chars wide to
+                          allow for wider title headers
+      bmy, 16 Dec 2011: GAMAP VERSION 2.16
+                        - Remove ACET from dryleaf and ACET from
+                          grass; these are obsolete GEIA quantities
+      mps, 23 Jan 2014: - Now report NH3 emissions in Tg N
+      bmy, 18 Aug 2014: GAMAP VERSION 2.18
+                        - Now display Anthro + Biofuels together
+                          which facilitates use w/ HEMCO emissions
+      bmy, 18 Aug 2014: - Now pass VERSION_NEW and VERSION_OLD as
+                          keywords.  If these are not specified, 
+                          then FULLCHEM_EMISSIONS will obtain these
+                          from the filenames FILENEW and FILEOLD.
+      ewl, 18 Mar 2015: - Replace SO2-BF-$ and SO4-BF-$ with SO2-BIOF
+                          and SO4-BIOF in anthro+biofuel section.
+
+===================
+GET_CONC_RANGE.PRO
+===================
+      bmy, 05 Sep 2012: VERSION 1.00
+      bmy, 24 Jan 2014: GAMAP VERSION 2.17
+                        - Updated comments
+
+===================
+GET_DIFF_RANGE.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.00
+
+===================
+JV_DIFF.PRO
+===================
+      mps, 02 Dec 2013: - Initial version, based on jv_ratios.pro
+mps & bmy, 29 May 2014: GAMAP VERSION 2.18
+                        - Compatible with extra J-Value tracers
+                          in v10-01c and higher versions
+
+===================
+JV_MAP.PRO
+===================
+      mps, 19 Apr 2014: VERSION 1.01
+                        - Adapted from jv_ratio.pro
+mps & bmy, 29 May 2014: GAMAP VERSION 2.18
+                        - Compatible with extra J-Value tracers
+                          in v10-01c and higher versions
+
+===================
+JV_RATIO.PRO
+===================
+      bmy, 14 Aug 2002: VERSION 1.01
+                        - Adapted from Isabelle Bey's "cat_plot.pro"
+                        - you may now specify different TAU values
+      bmy, 13 Sep 2002: VERSION 1.02
+                          for FILENEW and FILEOLD via the TAU0 keyword
+      bmy, 04 Oct 2004: VERSION 1.03
+                        - Remove MIN_VALID from call to TVMAP
+      bmy, 09 Nov 2007: VERSION 1.04
+                        - Modified argument list and some 
+                          internal variable names.
+      bmy, 20 Nov 2007: VERSION 1.05
+                        - Now draw out-of-bounds triangles for
+                          the colorbar when using the "small"
+                          data ranges.  New feature of TVMAP.
+      bmy, 07 May 2008: VERSION 1.06
+                        - Now allow for comparing models on 2
+                          different vertical grids.
+      bmy, 08 Feb 2011: VERSION 1.07
+                        - Now display in the top-of-plot title
+                          if the dynamic range option is used.
+      bmy, 08 Jun 2011: VERSION 1.08
+                        - Now create log plots in range 0.5 - 2.0
+                        - Added /DO_FULLCHEM keyword
+                        - Adjust colorbar so that the 0.9 - 1.1
+                          range shows up in white.
+                        - Now restore !MYCT sysvar to previous
+                          settings upon exiting the program
+mps & bmy, 29 May 2014: GAMAP VERSION 2.18
+                        - Compatible with extra J-Value tracers
+                          in v10-01c and higher versions; 
+
+===================
+MAPS.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.01
+                        - Based on "tracer_map.pro" 
+      bmy, 07 May 2008: VERSION 1.06
+                        - Now allow for comparing models on 2
+      bmy, 08 Jun 2011: VERSION 1.07
+                        - Added /DO_FULLCHEM keyword
+                        - Now restore !MYCT sysvar to previous
+                          settings upon exiting the program
+      mps, 29 Mar 2013: - Now plot chemically produced HO2
+
+===================
+MAPS_AOD.PRO
+===================
+      bmy, 05 Sep 2012: VERSION 1.01
+                        - Initial version
+      mps, 16 Sep 2013: - Modified for 1-month benchmark output
+      bmy, 24 Jan 2014: GAMAP VERSION 2.17
+                        - Updated comments
+
+===================
+MCF_LIFETIME.PRO
+===================
+      bmy, 08 Jun 2011: VERSION 1.00
+
+===================
+PROFILES.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.01
+                        - Initial version
+      bmy, 20 Nov 2007: VERSION 1.02
+                        - Now draw out-of-bounds triangles for
+                          the colorbar when using the "small"
+                          data ranges.  New feature of TVMAP.
+      bmy, 08 Feb 2011: VERSION 1.03
+                        - Now display in the top-of-plot title
+                          if the dynamic range option is used.
+      bmy, 08 Jun 2011: VERSION 1.04
+                        - Added /DO_FULLCHEM keyword
+                        - Now call COLORBAR with the UPOS keyword 
+                          to place the colorbar unit string properly
+                        - Now use appropriate settings for creating
+                          plots w/ the full dynamic range (/DYNRANGE)
+                        - Now restore !MYCT sysvar to previous
+                          settings upon exiting the program
+                        - Better adjust colorbar position for /PS
+      bmy, 11 May 2012: GAMAP VERSION 2.16
+                        - Modify the error check to allow
+                          comparison of equivalent vertical grids
+                          (e.g. GEOS-5, MERRA, GEOS-5.7) even if
+                          the model names differ
+      mps, 04 Mar 2016: - Include MERRA2 in the check for equivalent
+                          vertical grids
+
+===================
+RATIOS.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.01
+                        - based on older routine "tracer_ratio.pro"
+      bmy, 20 Nov 2007: VERSION 1.02
+                        - Now draw out-of-bounds triangles for
+                          the colorbar when using the "small"
+                          data ranges.  New feature of TVMAP.;
+      bmy, 07 May 2008: VERSION 1.03
+                        - Now allow for comparing models on 2
+                          different vertical grids.
+      bmy, 08 Feb 2011: VERSION 1.04
+                        - Now display in the top-of-plot title
+                          if the dynamic range option is used.
+      bmy, 08 Jun 2011: VERSION 1.05
+                        - Now create log plots in range 0.5 - 2.0
+                        - Added /DO_FULLCHEM keyword
+                        - Adjust colorbar so that the 0.9 - 1.1
+                          range shows up in white.
+                        - Now restore !MYCT sysvar to previous
+                          settings upon exiting the program
+                        - Better adjust colorbar position for /PS
+      mps, 29 Mar 2013: - Now plot HO2 ratios
+
+===================
+READ_CONC_RANGE.PRO
+===================
+      bmy, 05 Sep 2012: VERSION 1.00
+      bmy, 24 Jan 2014: GAMAP VERSION 2.17
+                        - Updated comments
+
+===================
+READ_DIFF_RANGE.PRO
+===================
+      bmy, 14 Nov 2007: VERSION 1.00
+
+===================
+STRAT.PRO
+===================
+      mps, 11 Sep 2015: - Initial version, based on zonal.pro
+
+===================
+STRAT_DIFF.PRO
+===================
+      mps, 11 Sep 2015: - Initial version, based on zonal_diff.pro
+      mps, 04 Jan 2016: - Include MERRA2 in the check for equivalent
+                          vertical grids
+
+===================
+ZONAL.PRO
+===================
+      cdh, 01 May 2012: Created zonal.pro based on maps.pro
+      bmy, 29 May 2013: GAMAP VERSION 2.17
+                        - Remove reference to MEAN2 function
+      mps, 07 Aug 2013: - Now plot chemically produced HO2
+      mps, 10 Sep 2015: - Added /PRESSURE keyword to plot pressure
+                          on the Y-axis (instead of altitude)
+
+===================
+ZONAL_DIFF.PRO
+===================
+      bmy, 21 Jun 2011: VERSION 1.01
+                        - Initial version, based on profiles.pro
+      bmy, 18 Jul 2011: - Added /PRESSURE keyword to plot pressure
+                          on the Y-axis (instead of altitude)
+      bmy, 11 May 2012: GAMAP VERSION 2.16
+                        - Now allow comparision of equivalent model
+                          grids, even if the model names differ
+                          (e.g. GEOS5_47L, MERRA_47L, GEOSFP_47L)
+      mps, 29 Mar 2013: - Now plot HO2 difference profiles
+      mps, 07 Aug 2013: - Now plot OH differences everywhere to fix bug
+                        - Pre-defined range for ratio plots is now set to
+                          +/- 30, so that we only plot ratios > 10%
+                        - Cap dynamic range ratio plots at 1000% to avoid
+                          going beyong max number of digits for colorbar
+      mps, 01 Oct 2015: - Include MERRA2 in the check for equivalent
+                          vertical grids
