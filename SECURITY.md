@@ -12,4 +12,4 @@ Please **do not** open a public GitHub issue for a suspected security vulnerabil
 
 Instead, report it privately using [the GitHub private security advisories form](https://github.com/geoschem/gamap-manual/security/advisories/new) for this repository. We will acknowledge your report and work to address confirmed issues.
 
-For non-security problems with these pages, such as broken links, please [open a GitHub issue](https://github.com/geoschem/gamap-manual/issues/new) instead.
+For non-security problems with these pages, such as broken links, see [SUPPORT.md](SUPPORT.md) instead.
